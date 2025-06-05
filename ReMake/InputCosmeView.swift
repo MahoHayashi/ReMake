@@ -28,6 +28,8 @@ struct InputCosmeView: View {
         CollapsibleSection(title: "リップ", items: ["ティント", "グロス", "マット"]),
         CollapsibleSection(title: "アイブロウ", items: ["ボリューム", "ロング"]),
     ]
+    
+    @State private var showsheet = false
 
     var body: some View {
         VStack {
@@ -35,13 +37,28 @@ struct InputCosmeView: View {
             HStack {
                 Spacer()
                 Button(action: {
-                    // Action here
+                    //アクションの内容をここに書く
+                    //ボタンが押されたらshowsheetプロパティを反転する
+                    self.showsheet.toggle()
                 }) {
                     Image(systemName: "plus")
                         .font(.system(size: 24))
                         .foregroundColor(.white)
                         .padding()
                         .background(Circle().fill(Color(red: 0xA6/255.0, green: 0x80/255.0, blue: 0x76/255.0)))
+                }
+                //showsheet
+                .sheet(isPresented: $showsheet){
+                    Mysheet()
+                        .presentationDetents([
+                            .medium,
+                            .large,
+                            // 高さ
+                            .height(300),
+                            // 画面に対する割合
+                            .fraction(0.8)
+                        ])
+                    
                 }
                 .padding()
             }
@@ -59,6 +76,55 @@ struct InputCosmeView: View {
                 }
             }
         }
+    }
+}
+
+struct Mysheet: View {
+    @Environment(\.dismiss) var dismiss
+    @State public var brand: String = ""
+    @State public var product: String = ""
+    @State public var color: String = ""
+
+    var body: some View {
+        VStack {
+            ZStack {
+                HStack {
+                    Button("キャンセル") {
+                        dismiss()
+                    }
+                    Spacer()
+                    Button("完了") {
+                    }
+                }
+                Text("マイコスメを追加")
+                    .font(.headline)
+            }
+            .padding(.bottom)
+            Spacer()
+            HStack {
+                Text("ブランド")
+                    .bold()
+                    .frame(width: 80, alignment: .leading)
+                TextField("ブランド名を入力してください", text: $brand)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+            }
+            HStack {
+                Text("商品名")
+                    .bold()
+                    .frame(width: 80, alignment: .leading)
+                TextField("商品名を入力してください", text: $product)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+            }
+            HStack {
+                Text("色番/色名")
+                    .bold()
+                    .frame(width: 80, alignment: .leading)
+                TextField("色番/色名を入力してください", text: $color)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+            }
+            Spacer()
+        }
+        .padding()
     }
 }
 
