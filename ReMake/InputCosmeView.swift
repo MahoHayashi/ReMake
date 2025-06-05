@@ -15,18 +15,18 @@ struct InputCosmeView: View {
         var isExpanded: Bool = true
     }
 
-    @State private var sections = [
-        CollapsibleSection(title: "化粧下地", items: ["化粧下地"]),
-        CollapsibleSection(title: "ファンデーション", items: ["リキッド", "パウダー"]),
-        CollapsibleSection(title: "コンシーラー", items: ["スティック", "クリーム"]),
-        CollapsibleSection(title: "チーク", items: ["パウダー", "クリーム"]),
-        CollapsibleSection(title: "ハイライト・シェーディング", items: ["パウダー", "クリーム"]),
-        CollapsibleSection(title: "アイシャドウ", items: ["単色", "パレット"]),
-        CollapsibleSection(title: "アイライナー", items: ["単色", "パレット"]),
-        CollapsibleSection(title: "マスカラ", items: ["ボリューム", "ロング"]),
-        CollapsibleSection(title: "アイブロウ", items: ["ボリューム", "ロング"]),
-        CollapsibleSection(title: "リップ", items: ["ティント", "グロス", "マット"]),
-        CollapsibleSection(title: "アイブロウ", items: ["ボリューム", "ロング"]),
+    @State public var sections = [
+        CollapsibleSection(title: "化粧下地", items: []),
+        CollapsibleSection(title: "ファンデーション", items: []),
+        CollapsibleSection(title: "コンシーラー", items: []),
+        CollapsibleSection(title: "チーク", items: []),
+        CollapsibleSection(title: "ハイライト・シェーディング", items: []),
+        CollapsibleSection(title: "アイシャドウ", items: []),
+        CollapsibleSection(title: "アイライナー", items: []),
+        CollapsibleSection(title: "マスカラ", items: []),
+        CollapsibleSection(title: "アイブロウ", items: []),
+        CollapsibleSection(title: "リップ", items: []),
+        CollapsibleSection(title: "アイブロウ", items: []),
     ]
     
     @State private var showsheet = false
@@ -49,16 +49,13 @@ struct InputCosmeView: View {
                 }
                 //showsheet
                 .sheet(isPresented: $showsheet){
-                    Mysheet()
+                    Mysheet(sections: sections)
                         .presentationDetents([
                             .medium,
                             .large,
-                            // 高さ
                             .height(300),
-                            // 画面に対する割合
                             .fraction(0.8)
                         ])
-                    
                 }
                 .padding()
             }
@@ -81,9 +78,12 @@ struct InputCosmeView: View {
 
 struct Mysheet: View {
     @Environment(\.dismiss) var dismiss
+    var sections: [InputCosmeView.CollapsibleSection]
     @State public var brand: String = ""
     @State public var product: String = ""
     @State public var color: String = ""
+    @State private var category = 1
+    @State private var selectedCategory: String = "化粧下地"
 
     var body: some View {
         VStack {
@@ -101,6 +101,18 @@ struct Mysheet: View {
             }
             .padding(.bottom)
             Spacer()
+            HStack {
+                Text("カテゴリ")
+                    .bold()
+                    .frame(width: 80, alignment: .leading)
+                Picker("カテゴリ", selection: $selectedCategory) {
+                    ForEach(sections, id: \.title) { section in
+                        Text(section.title).tag(section.title)
+                    }
+                }
+                .pickerStyle(MenuPickerStyle())
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
             HStack {
                 Text("ブランド")
                     .bold()
