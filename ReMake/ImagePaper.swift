@@ -11,8 +11,8 @@ struct ImagePager: View {
 
     var imageNames: [String]
     
-    @State private var index: Int = 0
-    @State private var offset: CGFloat = 0
+    @Binding var index: Int
+    @State public var offset: CGFloat = 0
     
     var body: some View {
         GeometryReader { geometry in // 1. offset(scroll位置)を操作するため、GeometryReaderを利用

@@ -45,6 +45,11 @@
 			path = ReMakeUITests;
 			sourceTree = "<group>";
 		};
+		17825B772DF349FE0017DBEB /* New Folder */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "New Folder";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +80,7 @@
 		17825AE92DEFEB8F0017DBEB = {
 			isa = PBXGroup;
 			children = (
+				17825B772DF349FE0017DBEB /* New Folder */,
 				17825AF42DEFEB8F0017DBEB /* ReMake */,
 				17825B022DEFEB910017DBEB /* ReMakeTests */,
 				17825B0C2DEFEB910017DBEB /* ReMakeUITests */,
@@ -109,6 +115,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				17825AF42DEFEB8F0017DBEB /* ReMake */,
+				17825B772DF349FE0017DBEB /* New Folder */,
 			);
 			name = ReMake;
 			packageProductDependencies = (

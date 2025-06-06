@@ -11,6 +11,11 @@ struct InputMakeupView: View {
     @State var makeName: String = ""
     @State var comment: String = ""
     @State var URLcomment: String = ""
+    
+    @State private var imageIndex: Int = 0
+    
+    @State private var showAlert: Bool = false
+    
     var body: some View {
         ZStack{
             Spacer()
@@ -30,13 +35,55 @@ struct InputMakeupView: View {
                             .padding(.trailing, 20)
                     }
                 }
-                ImagePager(imageNames: [
+                    //イニシャライザに渡す
+                    ZStack {
+                        ImagePager(imageNames: [
                             "MakeupFace",
-                            "blackLip",
-                            "blackFace"
-                        ])
-                    //.resizable()
-                    .frame(width: 370, height: 370)
+                            "pinkPaper",
+                            "morepinkPaper"
+                        ], index: $imageIndex)
+                        .frame(width: 370, height: 370)
+                        
+                        if imageIndex == 1 {
+                            VStack {
+                                Spacer()
+                                Button("顔全体の写真") {
+                                    showAlert.toggle()
+                                }
+                                .bold()
+                                .font(.system(size: 50))
+                                .foregroundColor(.black)
+                                .padding(.top, 20)
+                                Spacer()
+                                .alert("顔全体の写真を撮る",isPresented: $showAlert) {
+                                    Button("キャンセル") {}
+                                    Button("はい") {}
+                                    //ダイアログ内で行う処理
+                                } message: {
+                                    Text("フラッシュをたこう！")
+                                }
+                            }
+                        }else if imageIndex == 2 {
+                            VStack {
+                                Spacer()
+                                Button("目元の写真") {
+                                    showAlert.toggle()
+                                }
+                                .bold()
+                                .font(.system(size: 50))
+                                .foregroundColor(.black)
+                                .padding(.top, 20)
+                                Spacer()
+                                .alert("目元の写真を撮る",isPresented: $showAlert) {
+                                    Button("キャンセル") {}
+                                    Button("はい") {}
+                                    //ダイアログ内で行う処理
+                                } message: {
+                                    Text("フラッシュをたこう！")
+                                }
+                            }
+                        }
+                    }
                 Spacer()
                 Spacer()
                 
