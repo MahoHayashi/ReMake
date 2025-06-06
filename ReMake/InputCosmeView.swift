@@ -31,6 +31,12 @@ struct InputCosmeView: View {
     
     @State private var showsheet = false
 
+    func addProductToSection(title: String, product: String) {
+        if let index = sections.firstIndex(where: { $0.title == title }) {
+            sections[index].items.append(product)
+        }
+    }
+
     var body: some View {
         VStack {
             
@@ -49,13 +55,15 @@ struct InputCosmeView: View {
                 }
                 //showsheet
                 .sheet(isPresented: $showsheet){
-                    Mysheet(sections: sections)
-                        .presentationDetents([
-                            .medium,
-                            .large,
-                            .height(300),
-                            .fraction(0.8)
-                        ])
+                    Mysheet(sections: sections) { title, product in
+                        addProductToSection(title: title, product: product)
+                    }
+                    .presentationDetents([
+                        .medium,
+                        .large,
+                        .height(300),
+                        .fraction(0.8)
+                    ])
                 }
                 .padding()
             }
@@ -84,6 +92,11 @@ struct Mysheet: View {
     @State public var color: String = ""
     @State private var category = 1
     @State private var selectedCategory: String = "化粧下地"
+    var onComplete: (String, String) -> Void
+    
+    var listProduct: String {
+        brand + " " + product + " " + color
+       }
 
     var body: some View {
         VStack {
@@ -94,6 +107,8 @@ struct Mysheet: View {
                     }
                     Spacer()
                     Button("完了") {
+                        onComplete(selectedCategory, listProduct)
+                        dismiss()
                     }
                 }
                 Text("マイコスメを追加")
