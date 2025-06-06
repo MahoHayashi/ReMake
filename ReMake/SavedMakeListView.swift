@@ -32,7 +32,6 @@ struct SavedMakeListView: View {
                         }
                         Spacer()
                         Button(action: {
-                            //ボタンの中でNavigationLinkを書くのではなくて状態をtrueにするというコードを書くだけ
                             isShowingInputView = true
                         }) {
                             Image(systemName: "plus")
