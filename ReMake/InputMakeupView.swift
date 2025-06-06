@@ -20,7 +20,7 @@ struct InputMakeupView: View {
                     Button {
                         
                     } label: {
-                        Text("比較")
+                        Text("完了")
                         //                        .font(.system(size: 25))
                         //                        .font(.headline)
                         //                        .frame(width: 100, height: 50)
@@ -30,8 +30,12 @@ struct InputMakeupView: View {
                             .padding(.trailing, 20)
                     }
                 }
-                Image("MakeupFace")
-                    .resizable()
+                ImagePager(imageNames: [
+                            "MakeupFace",
+                            "blackLip",
+                            "blackFace"
+                        ])
+                    //.resizable()
                     .frame(width: 370, height: 370)
                 Spacer()
                 Spacer()
