@@ -7,9 +7,29 @@
 
 import SwiftUI
 
+struct SavedMakeListView: View {
+    var body: some View {
+        Text("保存されたメイク一覧（仮）")
+            .padding()
+    }
+}
+
 struct MainTabView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        TabView {
+            SavedMakeListView()
+                .tabItem {
+                    Image(systemName: "person.crop.square.on.square.angled")
+                    Text("メイク一覧")
+                }
+
+            InputCosmeView()
+                .tabItem {
+                    Image(systemName: "list.bullet")
+                    Text("コスメ一覧")
+                }
+        }
+        .accentColor(.pink)
     }
 }
 

@@ -156,5 +156,5 @@ struct Mysheet: View {
 }
 
 #Preview {
-    InputCosmeView()
+    MainTabView()
 }
