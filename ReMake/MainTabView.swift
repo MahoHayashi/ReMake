@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-struct SavedMakeListView: View {
-    var body: some View {
-        Text("保存されたメイク一覧（仮）")
-            .padding()
-    }
-}
 
 struct MainTabView: View {
     var body: some View {
