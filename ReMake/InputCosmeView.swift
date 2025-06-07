@@ -6,6 +6,29 @@
 //
 
 import SwiftUI
+import Foundation
+import SwiftData
+
+@Model
+class Cosmetic {
+    var id: UUID
+    var brand: String
+    var product: String
+    var color: String
+    var category: String
+
+    init(brand: String, product: String, color: String, category: String) {
+        self.id = UUID()
+        self.brand = brand
+        self.product = product
+        self.color = color
+        self.category = category
+    }
+
+    var listProduct: String {
+        "\(brand) \(product) \(color)"
+    }
+}
 
 struct InputCosmeView: View {
     struct CollapsibleSection: Identifiable {
@@ -30,11 +53,27 @@ struct InputCosmeView: View {
     ]
     
     @State private var showsheet = false
+    @Environment(\.modelContext) private var modelContext
+    @Query  var cosmetics: [Cosmetic]
 
+    //titleにあったitemに追加する関数
     func addProductToSection(title: String, product: String) {
+        let updatedProducts = cosmetics
+            .filter { $0.category == title }
+            .map { $0.listProduct }
+
         if let index = sections.firstIndex(where: { $0.title == title }) {
-            sections[index].items.append(product)
+            sections[index].items = updatedProducts
         }
+    }
+    
+    //コスメを追加する関数(関数作らずに.insertだけでよかったかも)
+    private func addCosmetic(brand: String, product: String, color: String, category: String) {
+        let newCosmetic = Cosmetic(brand: brand, product: product, color: color, category: category)
+        modelContext.insert(newCosmetic)
+        try? modelContext.save()
+        let productString = newCosmetic.listProduct
+        addProductToSection(title: category, product: productString)
     }
 
     var body: some View {
@@ -55,8 +94,8 @@ struct InputCosmeView: View {
                 }
                 //showsheet
                 .sheet(isPresented: $showsheet){
-                    Mysheet(sections: sections) { title, product in
-                        addProductToSection(title: title, product: product)
+                    Mysheet(sections: sections) { category, brand, product, color in
+                        addCosmetic(brand: brand, product: product, color: color, category: category)
                     }
                     .presentationDetents([
                         .medium,
@@ -74,6 +113,14 @@ struct InputCosmeView: View {
                             Text(item)
                                 .foregroundColor(Color(white: 0.3))
                         }
+                        //削除機能
+                        .onDelete { indexSet in
+                                for index in indexSet {
+                                    let cosmeticToDelete = cosmetics[index]
+                                    modelContext.delete(cosmeticToDelete)
+                                }
+                                try? modelContext.save() //try?はもしエラーが起きても無視して処理を続けるの意味
+                            }
                     } label: {
                         Text(section.title)
                             .font(.headline)
@@ -81,18 +128,30 @@ struct InputCosmeView: View {
                 }
             }
         }
+        //画面が開かれたとき、初期設定をしている
+        .onAppear {
+            for index in sections.indices {
+                let title = sections[index].title
+                let products = cosmetics
+                    .filter { $0.category == title }
+                    .map { $0.listProduct }
+                sections[index].items = products
+            }
+        }
     }
 }
 
 struct Mysheet: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) private var modelContext
     var sections: [InputCosmeView.CollapsibleSection]
     @State public var brand: String = ""
     @State public var product: String = ""
     @State public var color: String = ""
     @State private var category = 1
     @State private var selectedCategory: String = "化粧下地"
-    var onComplete: (String, String) -> Void
+    @Query var cosmetics: [Cosmetic]
+    var onComplete: (String, String, String, String) -> Void
     
     var listProduct: String {
         brand + " " + product + " " + color
@@ -107,7 +166,10 @@ struct Mysheet: View {
                     }
                     Spacer()
                     Button("完了") {
-                        onComplete(selectedCategory, listProduct)
+                        let newCosmetic = Cosmetic(brand: brand, product: product, color: color, category: selectedCategory)
+                        modelContext.insert(newCosmetic)
+                        try? modelContext.save()
+                        onComplete(selectedCategory, brand, product, color)
                         dismiss()
                     }
                 }

@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		17825B942DF444F80017DBEB /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17825B932DF444F80017DBEB /* SwiftData.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		17825B002DEFEB910017DBEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		17825AF22DEFEB8F0017DBEB /* ReMake.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReMake.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17825AFF2DEFEB910017DBEB /* ReMakeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReMakeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		17825B092DEFEB910017DBEB /* ReMakeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReMakeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		17825B932DF444F80017DBEB /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -57,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17825B942DF444F80017DBEB /* SwiftData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +90,7 @@
 				17825AF42DEFEB8F0017DBEB /* ReMake */,
 				17825B022DEFEB910017DBEB /* ReMakeTests */,
 				17825B0C2DEFEB910017DBEB /* ReMakeUITests */,
+				17825B922DF444F80017DBEB /* Frameworks */,
 				17825AF32DEFEB8F0017DBEB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -96,6 +103,14 @@
 				17825B092DEFEB910017DBEB /* ReMakeUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		17825B922DF444F80017DBEB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				17825B932DF444F80017DBEB /* SwiftData.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

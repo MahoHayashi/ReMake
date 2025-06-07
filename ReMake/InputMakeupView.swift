@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct InputMakeupView: View {
     @State var makeName: String = ""
@@ -15,6 +16,19 @@ struct InputMakeupView: View {
     @State private var imageIndex: Int = 0
     
     @State private var showAlert: Bool = false
+    
+    @State private var showPickerSheet = false
+    @State private var selectedOption = "（登録されたコスメがありません）"
+    @State private var sheetTitle: String = ""
+
+    @Environment(\.modelContext) private var modelContext
+    @Query private var cosmetics: [Cosmetic]
+
+var pickerOptions: [String] {
+    let options = Array(Set(cosmetics.map { $0.listProduct }))
+    //なにもコスメが登録されていない場合の処理
+    return options.isEmpty ? ["（登録されたコスメがありません）"] : options
+}
     
     var body: some View {
         ZStack{
@@ -46,42 +60,86 @@ struct InputMakeupView: View {
                         
                         if imageIndex == 0 {
                             // Add six plus buttons over the image
-                            Button(action: {}) {
+                            Button(action: {
+                                sheetTitle = "目元のコスメを選択"
+                                showPickerSheet = true
+                            }) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(.secondary)
-                            }.position(x: 123, y: 185)//目元
+                            }//目元のコスメ
+                            .position(x: 123, y: 185)
+                            .sheet(isPresented: $showPickerSheet) {
+                                VStack {
+                                    Text(sheetTitle)
+                                        .font(.headline)
+                                        .padding()
+                                    Picker("選択", selection: $selectedOption) {
+                                        ForEach(pickerOptions, id: \.self) { option in
+                                            Text(option)
+                                        }
+                                    }
+                                    .pickerStyle(.wheel)
+                                    .padding()
 
-                            Button(action: {}) {
+                                    Button("完了") {
+                                        showPickerSheet = false
+                                    }
+                                    .padding()
+                                }
+                                .presentationDetents([
+                                    .medium,
+                                    .large,
+                                    .height(300),
+                                    .fraction(0.8)
+                                ])
+                            }
+
+                            Button(action: {
+                                sheetTitle = "リップを選択"
+                                showPickerSheet = true
+                            }) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(.secondary)
                             }.position(x: 218, y: 285) //リップ
 
-                            Button(action: {}) {
+                            Button(action: {
+                                sheetTitle = "ハイライト・シェーディングを選択"
+                                showPickerSheet = true
+                            }) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(.secondary)
-                            }.position(x: 204, y: 227) //ハイライト
+                            }.position(x: 204, y: 227) //ハイライト・シェーディング
 
-                            Button(action: {}) {
+                            Button(action: {
+                                sheetTitle = "アイブロウを選択"
+                                showPickerSheet = true
+                            }) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(.secondary)
-                            }.position(x: 278, y: 152) //眉毛
+                            }.position(x: 278, y: 152) //アイブロウ
 
-                            Button(action: {}) {
+                            Button(action: {
+                                sheetTitle = "ベースメイクを選択"
+                                showPickerSheet = true
+                            }) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(.secondary)
-                            }.position(x: 135, y: 247) //化粧下地とか
+                            }.position(x: 135, y: 247) //ベースメイク
 
-                            Button(action: {}) {
+                            Button(action: {
+                                sheetTitle = "チークを選択"
+                                showPickerSheet = true
+                            }) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
@@ -126,6 +184,7 @@ struct InputMakeupView: View {
                                     Text("フラッシュをたこう！")
                                 }
                             }
+                            
                         }
                     }
                 Spacer()

@@ -13,5 +13,6 @@ struct ReMakeApp: App {
         WindowGroup {
             MainTabView()
         }
+        .modelContainer(for: [Cosmetic.self])
     }
 }
