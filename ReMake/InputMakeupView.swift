@@ -51,42 +51,42 @@ struct InputMakeupView: View {
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(.secondary)
-                            }.position(x: 125, y: 220)//目元
+                            }.position(x: 123, y: 185)//目元
 
                             Button(action: {}) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(.secondary)
-                            }.position(x: 220, y: 320) //リップ
+                            }.position(x: 218, y: 285) //リップ
 
                             Button(action: {}) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(.secondary)
-                            }.position(x: 204, y: 265)
+                            }.position(x: 204, y: 227) //ハイライト
 
                             Button(action: {}) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(.secondary)
-                            }.position(x: 280, y: 200) //眉毛
+                            }.position(x: 278, y: 152) //眉毛
 
                             Button(action: {}) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(.secondary)
-                            }.position(x: 135, y: 285) //化粧下地とか
+                            }.position(x: 135, y: 247) //化粧下地とか
 
                             Button(action: {}) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(.secondary)
-                            }.position(x: 270, y: 270) //チーク
+                            }.position(x: 270, y: 230) //チーク
                             
                         }else if imageIndex == 1 {
                             VStack {
