@@ -67,13 +67,22 @@ struct InputCosmeView: View {
         }
     }
     
+    func updateSections() {
+        for index in sections.indices {
+            let title = sections[index].title
+            let products = cosmetics
+                .filter { $0.category == title }
+                .map { $0.listProduct }
+            sections[index].items = products
+        }
+    }
+    
     //コスメを追加する関数(関数作らずに.insertだけでよかったかも)
     private func addCosmetic(brand: String, product: String, color: String, category: String) {
         let newCosmetic = Cosmetic(brand: brand, product: product, color: color, category: category)
         modelContext.insert(newCosmetic)
         try? modelContext.save()
-        let productString = newCosmetic.listProduct
-        addProductToSection(title: category, product: productString)
+        updateSections()
     }
 
     var body: some View {
@@ -115,12 +124,15 @@ struct InputCosmeView: View {
                         }
                         //削除機能
                         .onDelete { indexSet in
-                                for index in indexSet {
-                                    let cosmeticToDelete = cosmetics[index]
+                            for index in indexSet {
+                                let itemToDelete = section.items[index]
+                                if let cosmeticToDelete = cosmetics.first(where: { $0.listProduct == itemToDelete }) {
                                     modelContext.delete(cosmeticToDelete)
                                 }
-                                try? modelContext.save() //try?はもしエラーが起きても無視して処理を続けるの意味
                             }
+                            try? modelContext.save()
+                            updateSections()
+                        }
                     } label: {
                         Text(section.title)
                             .font(.headline)
@@ -166,9 +178,6 @@ struct Mysheet: View {
                     }
                     Spacer()
                     Button("完了") {
-                        let newCosmetic = Cosmetic(brand: brand, product: product, color: color, category: selectedCategory)
-                        modelContext.insert(newCosmetic)
-                        try? modelContext.save()
                         onComplete(selectedCategory, brand, product, color)
                         dismiss()
                     }
