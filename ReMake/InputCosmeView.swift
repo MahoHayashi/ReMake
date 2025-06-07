@@ -24,9 +24,9 @@ struct InputCosmeView: View {
         CollapsibleSection(title: "アイシャドウ", items: []),
         CollapsibleSection(title: "アイライナー", items: []),
         CollapsibleSection(title: "マスカラ", items: []),
+        CollapsibleSection(title: "カラコン", items: []),
         CollapsibleSection(title: "アイブロウ", items: []),
         CollapsibleSection(title: "リップ", items: []),
-        CollapsibleSection(title: "アイブロウ", items: []),
     ]
     
     @State private var showsheet = false

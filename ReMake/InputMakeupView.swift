@@ -44,7 +44,45 @@ struct InputMakeupView: View {
                         ], index: $imageIndex)
                         .frame(width: 370, height: 370)
                         
-                        if imageIndex == 1 {
+                        if imageIndex == 0 {
+                            // Add six plus buttons over the image
+                            Button(action: {}) {
+                                Image(systemName: "plus.circle")
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                            }.position(x: 125, y: 220)//目元
+
+                            Button(action: {}) {
+                                Image(systemName: "plus.circle")
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                            }.position(x: 220, y: 320) //リップ
+
+                            Button(action: {}) {
+                                Image(systemName: "plus.circle")
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                            }.position(x: 204, y: 265)
+
+                            Button(action: {}) {
+                                Image(systemName: "plus.circle")
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                            }.position(x: 280, y: 200) //眉毛
+
+                            Button(action: {}) {
+                                Image(systemName: "plus.circle")
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                            }.position(x: 135, y: 285) //化粧下地とか
+
+                            Button(action: {}) {
+                                Image(systemName: "plus.circle")
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                            }.position(x: 270, y: 270) //チーク
+                            
+                        }else if imageIndex == 1 {
                             VStack {
                                 Spacer()
                                 Button("顔全体の写真") {
