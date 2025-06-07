@@ -50,6 +50,7 @@ struct InputMakeupView: View {
     @State private var sheetTitle: String = ""
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     @Query private var cosmetics: [Cosmetic]
 
 var pickerOptions: [String] {
@@ -81,6 +82,7 @@ var pickerOptions: [String] {
                         let record = MakeupRecord(name: makeName, comment: comment, url: URLcomment)
                         modelContext.insert(record)
                         try? modelContext.save()
+                        dismiss()
                     } label: {
                         Text("完了")
                         //                        .font(.system(size: 25))
