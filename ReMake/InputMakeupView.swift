@@ -50,36 +50,42 @@ struct InputMakeupView: View {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
+                                    .foregroundColor(.secondary)
                             }.position(x: 125, y: 220)//目元
 
                             Button(action: {}) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
+                                    .foregroundColor(.secondary)
                             }.position(x: 220, y: 320) //リップ
 
                             Button(action: {}) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
+                                    .foregroundColor(.secondary)
                             }.position(x: 204, y: 265)
 
                             Button(action: {}) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
+                                    .foregroundColor(.secondary)
                             }.position(x: 280, y: 200) //眉毛
 
                             Button(action: {}) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
+                                    .foregroundColor(.secondary)
                             }.position(x: 135, y: 285) //化粧下地とか
 
                             Button(action: {}) {
                                 Image(systemName: "plus.circle")
                                     .resizable()
                                     .frame(width: 24, height: 24)
+                                    .foregroundColor(.secondary)
                             }.position(x: 270, y: 270) //チーク
                             
                         }else if imageIndex == 1 {
