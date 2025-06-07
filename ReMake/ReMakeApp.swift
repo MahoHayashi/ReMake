@@ -13,6 +13,7 @@ struct ReMakeApp: App {
         WindowGroup {
             MainTabView()
         }
-        .modelContainer(for: [Cosmetic.self])
+        //複数のModelクラスを使うのでmodelContainerに使用する全てのモデルクラスを列挙して指定する必要がある
+        .modelContainer(for: [Cosmetic.self,MakeupRecord.self])
     }
 }

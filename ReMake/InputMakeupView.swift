@@ -6,9 +6,31 @@
 //
 
 import SwiftUI
+import Foundation
 import SwiftData
 
+@Model
+class MakeupRecord {
+    var id = UUID()
+    var name: String
+    var comment: String
+    var url: String
+
+    init(name: String, comment: String, url: String) {
+        self.name = name
+        self.comment = comment
+        self.url = url
+    }
+}
+
+
 struct InputMakeupView: View {
+    
+    //カテゴリとか種別のものはenumの方が可読性が良い！
+    enum SelectionType {
+        case eye, lip, highlight, eyebrow, base, cheek
+    }
+    
     @State var makeName: String = ""
     @State var comment: String = ""
     @State var URLcomment: String = ""
@@ -18,7 +40,13 @@ struct InputMakeupView: View {
     @State private var showAlert: Bool = false
     
     @State private var showPickerSheet = false
-    @State private var selectedOption = "（登録されたコスメがありません）"
+    @State private var selectedEye = ""
+    @State private var selectedLip = ""
+    @State private var selectedHighlight = ""
+    @State private var selectedEyebrow = ""
+    @State private var selectedBase = ""
+    @State private var selectedCheek = ""
+    @State private var currentSelection: SelectionType? = nil
     @State private var sheetTitle: String = ""
 
     @Environment(\.modelContext) private var modelContext
@@ -30,6 +58,19 @@ var pickerOptions: [String] {
     return options.isEmpty ? ["（登録されたコスメがありません）"] : options
 }
     
+    func bindingForCurrentSelection() -> Binding<String> {
+        //enumとswitch文は相性が良い！
+        switch currentSelection {
+        case .eye: return $selectedEye
+        case .lip: return $selectedLip
+        case .highlight: return $selectedHighlight
+        case .eyebrow: return $selectedEyebrow
+        case .base: return $selectedBase
+        case .cheek: return $selectedCheek
+        case .none: return .constant("")
+        }
+    }
+    
     var body: some View {
         ZStack{
             Spacer()
@@ -37,7 +78,9 @@ var pickerOptions: [String] {
                 HStack {
                     Spacer()
                     Button {
-                        
+                        let record = MakeupRecord(name: makeName, comment: comment, url: URLcomment)
+                        modelContext.insert(record)
+                        try? modelContext.save()
                     } label: {
                         Text("完了")
                         //                        .font(.system(size: 25))
@@ -62,6 +105,7 @@ var pickerOptions: [String] {
                             // Add six plus buttons over the image
                             Button(action: {
                                 sheetTitle = "目元のコスメを選択"
+                                currentSelection = .eye
                                 showPickerSheet = true
                             }) {
                                 Image(systemName: "plus.circle")
@@ -75,18 +119,26 @@ var pickerOptions: [String] {
                                     Text(sheetTitle)
                                         .font(.headline)
                                         .padding()
-                                    Picker("選択", selection: $selectedOption) {
-                                        ForEach(pickerOptions, id: \.self) { option in
-                                            Text(option)
+                                        Picker("選択", selection: bindingForCurrentSelection()) {
+                                            ForEach(pickerOptions, id: \.self) { option in
+                                                Text(option)
+                                            }
+                                        }
+                                        .pickerStyle(.wheel)
+                                        .padding()
+                                    HStack {
+                                        
+                                        Button("キャンセル") {
+                                            showPickerSheet = false
+                                        }
+                                        .padding(.leading, 16)
+                                        Spacer()
+                                        Button("完了") {
+                                            showPickerSheet = false
                                         }
                                     }
-                                    .pickerStyle(.wheel)
-                                    .padding()
-
-                                    Button("完了") {
-                                        showPickerSheet = false
-                                    }
-                                    .padding()
+                                    .padding(.leading, 16)
+                                    .padding(.trailing, 40)
                                 }
                                 .presentationDetents([
                                     .medium,
@@ -98,6 +150,7 @@ var pickerOptions: [String] {
 
                             Button(action: {
                                 sheetTitle = "リップを選択"
+                                currentSelection = .lip
                                 showPickerSheet = true
                             }) {
                                 Image(systemName: "plus.circle")
@@ -108,6 +161,7 @@ var pickerOptions: [String] {
 
                             Button(action: {
                                 sheetTitle = "ハイライト・シェーディングを選択"
+                                currentSelection = .highlight
                                 showPickerSheet = true
                             }) {
                                 Image(systemName: "plus.circle")
@@ -118,6 +172,7 @@ var pickerOptions: [String] {
 
                             Button(action: {
                                 sheetTitle = "アイブロウを選択"
+                                currentSelection = .eyebrow
                                 showPickerSheet = true
                             }) {
                                 Image(systemName: "plus.circle")
@@ -128,6 +183,7 @@ var pickerOptions: [String] {
 
                             Button(action: {
                                 sheetTitle = "ベースメイクを選択"
+                                currentSelection = .base
                                 showPickerSheet = true
                             }) {
                                 Image(systemName: "plus.circle")
@@ -138,6 +194,7 @@ var pickerOptions: [String] {
 
                             Button(action: {
                                 sheetTitle = "チークを選択"
+                                currentSelection = .cheek
                                 showPickerSheet = true
                             }) {
                                 Image(systemName: "plus.circle")
