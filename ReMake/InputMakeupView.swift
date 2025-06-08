@@ -160,7 +160,7 @@ var pickerOptions: [String] {
                                         .foregroundColor(.secondary)
                                 }
                             }
-                            .position(x: 204, y: 227) //ハイライト・シェーディング
+                            .position(x: 204, y: 205) //ハイライト・シェーディング
 
                             VStack(spacing: 0) {
                                 if let value = selectedItems[.eyebrow], !value.isEmpty {
