@@ -6,17 +6,21 @@
 //
 
 import SwiftUI
+import Foundation
+import SwiftData
 
 struct SavedMakeListView: View {
     @State private var isShowingInputView = false
+    @Query private var savedRecords: [MakeupRecord]
+    @State private var cards: [MakeupRecord] = []
     var body: some View {
         NavigationView {
             ZStack {
                 // NavigationLink for navigation
-                NavigationLink(destination: InputMakeupView(), isActive: $isShowingInputView) {
+                NavigationLink(destination: InputMakeupView(isPresented: $isShowingInputView), isActive: $isShowingInputView) {
                     EmptyView()
                 }
-                VStack {
+                VStack(spacing: 0) {
                     HStack {
                         Button {
                             
@@ -42,8 +46,38 @@ struct SavedMakeListView: View {
                         }
                         .padding(.trailing, 20)
                     }
-                    Spacer()
+                    .padding(.vertical, 8)
+
+                    ScrollView {
+                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                            ForEach(cards, id: \.id) { card in
+                                Button(action: {
+                                    // ここに個別のアクション
+                                }) {
+                                    VStack {
+                                        Image("Marichan")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .cornerRadius(10)
+                                            .frame(width: 150, height: 150)
+                                        Text(card.name)
+                                        Text("どうも")
+                                    }
+                                    .frame(width: 150, height: 230)
+                                    .padding()
+                                    .background(.white)
+                                    .cornerRadius(20)
+                                    .clipped()
+                                    .shadow(color: .gray.opacity(0.7), radius: 5)
+                                }
+                            }
+                        }
+                        .padding()
+                    }
                 }
+            }
+            .onAppear {
+                cards = savedRecords
             }
         }
     }

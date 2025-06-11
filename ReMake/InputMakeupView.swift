@@ -24,6 +24,11 @@ class MakeupRecord {
 }
 
 
+class CameraLaunchViewModel: ObservableObject {
+    @Published var isLaunchedCamera = false
+    @Published var imageData = Data()
+}
+
 struct InputMakeupView: View {
     
     //カテゴリとか種別のものはenumの方が可読性が良い！
@@ -34,11 +39,11 @@ struct InputMakeupView: View {
     @State var makeName: String = ""
     @State var comment: String = ""
     @State var URLcomment: String = ""
-    
+
     @State private var imageIndex: Int = 0
-    
+
     @State private var showAlert: Bool = false
-    
+
     @State private var showPickerSheet = false
     @State private var selectedEye = ""
     @State private var selectedLip = ""
@@ -54,8 +59,11 @@ struct InputMakeupView: View {
     @State private var sheetTitle: String = ""
     @State private var selectedItems: [SelectionType: String] = [:]
 
+    @StateObject private var viewModel = CameraLaunchViewModel()
+
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Binding var isPresented: Bool //NavigationStack使ってるからBinding
     @Query private var cosmetics: [Cosmetic]
 
 var pickerOptions: [String] {
@@ -91,7 +99,8 @@ var pickerOptions: [String] {
                         let record = MakeupRecord(name: makeName, comment: comment, url: URLcomment)
                         modelContext.insert(record)
                         try? modelContext.save()
-                        dismiss()
+                    isPresented = false
+                        //dismiss() NavigationLinkを使っている場合はむり
                     } label: {
                         Text("完了")
                         //                        .font(.system(size: 25))
@@ -409,11 +418,17 @@ var pickerOptions: [String] {
                                 Spacer()
                                 .alert("顔全体の写真を撮る",isPresented: $showAlert) {
                                     Button("キャンセル") {}
-                                    Button("はい") {}
+                                    Button("はい") {
+                                        showAlert = false
+                                        viewModel.isLaunchedCamera = true
+                                    }
                                     //ダイアログ内で行う処理
                                 } message: {
                                     Text("フラッシュをたこう！")
                                 }
+                            }
+                            .fullScreenCover(isPresented: $viewModel.isLaunchedCamera) {
+                                Imagepicker(show: $viewModel.isLaunchedCamera, image: $viewModel.imageData)
                             }
                         }else if imageIndex == 3 {
                             VStack {
@@ -428,7 +443,10 @@ var pickerOptions: [String] {
                                 Spacer()
                                 .alert("目元の写真を撮る",isPresented: $showAlert) {
                                     Button("キャンセル") {}
-                                    Button("はい") {}
+                                    Button("はい") {
+                                        showAlert = false
+                                        viewModel.isLaunchedCamera = true
+                                    }
                                     //ダイアログ内で行う処理
                                 } message: {
                                     Text("フラッシュをたこう！")
@@ -474,5 +492,5 @@ var pickerOptions: [String] {
 }
 
 #Preview {
-    InputMakeupView()
+    InputMakeupView(isPresented: .constant(true))
 }
