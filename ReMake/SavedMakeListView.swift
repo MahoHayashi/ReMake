@@ -10,16 +10,13 @@ import Foundation
 import SwiftData
 
 struct SavedMakeListView: View {
-    @State private var isShowingInputView = false
     @Query private var savedRecords: [MakeupRecord]
     @State private var cards: [MakeupRecord] = []
+    @State private var path = NavigationPath()
     var body: some View {
-        NavigationView {
+        NavigationStack(path: $path) {
             ZStack {
                 // NavigationLink for navigation
-                NavigationLink(destination: InputMakeupView(isPresented: $isShowingInputView), isActive: $isShowingInputView) {
-                    EmptyView()
-                }
                 VStack(spacing: 0) {
                     HStack {
                         Button {
@@ -36,7 +33,7 @@ struct SavedMakeListView: View {
                         }
                         Spacer()
                         Button(action: {
-                            isShowingInputView = true
+                            path.append("input")
                         }) {
                             Image(systemName: "plus")
                                 .font(.system(size: 24))
@@ -78,6 +75,11 @@ struct SavedMakeListView: View {
             }
             .onAppear {
                 cards = savedRecords
+            }
+            .navigationDestination(for: String.self) { value in
+                if value == "input" {
+                    InputMakeupView(path: $path)
+                }
             }
         }
     }

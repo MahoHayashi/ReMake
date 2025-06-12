@@ -63,7 +63,7 @@ struct InputMakeupView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @Binding var isPresented: Bool //NavigationStack使ってるからBinding
+    @Binding var path: NavigationPath
     @Query private var cosmetics: [Cosmetic]
 
 var pickerOptions: [String] {
@@ -99,7 +99,7 @@ var pickerOptions: [String] {
                         let record = MakeupRecord(name: makeName, comment: comment, url: URLcomment)
                         modelContext.insert(record)
                         try? modelContext.save()
-                    isPresented = false
+                        path.removeLast()
                         //dismiss() NavigationLinkを使っている場合はむり
                     } label: {
                         Text("完了")
@@ -492,5 +492,5 @@ var pickerOptions: [String] {
 }
 
 #Preview {
-    InputMakeupView(isPresented: .constant(true))
+    InputMakeupView(path: .constant(NavigationPath()))
 }
