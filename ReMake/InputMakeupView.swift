@@ -74,6 +74,10 @@ struct InputMakeupView: View {
 
     @StateObject private var viewModel = CameraLaunchViewModel()
 
+    // 追加: 撮影後のデータ一時保存
+    @State private var tempFaceImageData: Data? = nil
+    @State private var tempEyeImageData: Data? = nil
+
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Binding var path: NavigationPath
@@ -112,17 +116,24 @@ var pickerOptions: [String] {
                     Button {
                         let record = MakeupRecord(name: makeName, comment: comment, url: URLcomment)
                         modelContext.insert(record)
+                        // SwiftData への保存処理
+                        if let data = tempFaceImageData {
+                            let facePhoto = FacePhoto(type: "face", imageData: data)
+                            modelContext.insert(facePhoto)
+                        }
+                        if let data = tempEyeImageData {
+                            let eyePhoto = FacePhoto(type: "eye", imageData: data)
+                            modelContext.insert(eyePhoto)
+                        }
                         try? modelContext.save()
+                        viewModel.imageData = Data()
+                        viewModel.capturedType = nil
+                        tempFaceImageData = nil
+                        tempEyeImageData = nil
                         path.removeLast()
                         //dismiss() NavigationLinkを使っている場合はむり
                     } label: {
                         Text("完了")
-                        //                        .font(.system(size: 25))
-                        //                        .font(.headline)
-                        //                        .frame(width: 100, height: 50)
-                        //                        .foregroundColor(.white)
-                        //                        .background(.pink)
-                        //                        .cornerRadius(20)
                             .padding(.trailing, 20)
                     }
                 }
@@ -420,13 +431,17 @@ var pickerOptions: [String] {
                                 .position(x: 340, y: 170) // アイライン
                             }
                         }else if imageIndex == 2 {
-                            // Show the face image if available
-                            if let faceImage = facePhotos.first(where: { $0.type == "face" }), let uiImage = UIImage(data: faceImage.imageData) {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 300, height: 300)
-                                    .cornerRadius(10)
+                            // tempFaceImageData の画像表示
+                            if let data = tempFaceImageData, let uiImage = UIImage(data: data) {
+                                Button {
+                                    tempFaceImageData = nil
+                                } label: {
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 300, height: 300)
+                                        .cornerRadius(10)
+                                }
                             }
                             VStack {
                                 Spacer()
@@ -445,7 +460,6 @@ var pickerOptions: [String] {
                                         viewModel.isLaunchedCamera = true
                                         viewModel.capturedType = "face"
                                     }
-                                    //ダイアログ内で行う処理
                                 } message: {
                                     Text("フラッシュをたこう！")
                                 }
@@ -453,21 +467,18 @@ var pickerOptions: [String] {
                             .fullScreenCover(isPresented: $viewModel.isLaunchedCamera) {
                                 Imagepicker(show: $viewModel.isLaunchedCamera, image: $viewModel.imageData)
                             }
-                            .onChange(of: viewModel.imageData) { newData in
-                                guard let type = viewModel.capturedType, !newData.isEmpty else { return }
-                                let photo = FacePhoto(type: type, imageData: newData)
-                                modelContext.insert(photo)
-                                try? modelContext.save()
-                                viewModel.capturedType = nil
-                            }
                         }else if imageIndex == 3 {
-                            // Show the eye image02 if available
-                            if let eyeImage = facePhotos.first(where: { $0.type == "eye" }), let uiImage = UIImage(data: eyeImage.imageData) {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 400, height: 350)
-                                    .cornerRadius(10)
+                            // tempEyeImageData の画像表示
+                            if let data = tempEyeImageData, let uiImage = UIImage(data: data) {
+                                Button {
+                                    tempEyeImageData = nil
+                                } label: {
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 400, height: 350)
+                                        .cornerRadius(10)
+                                }
                             }
                             VStack {
                                 Spacer()
@@ -486,20 +497,12 @@ var pickerOptions: [String] {
                                         viewModel.isLaunchedCamera = true
                                         viewModel.capturedType = "eye"
                                     }
-                                    //ダイアログ内で行う処理
                                 } message: {
                                     Text("フラッシュをたこう！")
                                 }
                             }
                             .fullScreenCover(isPresented: $viewModel.isLaunchedCamera) {
                                 Imagepicker(show: $viewModel.isLaunchedCamera, image: $viewModel.imageData)
-                            }
-                            .onChange(of: viewModel.imageData) { newData in
-                                guard let type = viewModel.capturedType, !newData.isEmpty else { return }
-                                let photo = FacePhoto(type: type, imageData: newData)
-                                modelContext.insert(photo)
-                                try? modelContext.save()
-                                viewModel.capturedType = nil
                             }
                         }
                     }
@@ -533,7 +536,16 @@ var pickerOptions: [String] {
                 Spacer()
                 Spacer()
                 Spacer()
-                
+            }
+        }
+        // .onChangeで撮影後のデータを一時保存
+        .onChange(of: viewModel.imageData) { newData in
+            if let type = viewModel.capturedType {
+                if type == "face" {
+                    tempFaceImageData = newData
+                } else if type == "eye" {
+                    tempEyeImageData = newData
+                }
             }
         }
     }
