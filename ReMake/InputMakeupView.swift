@@ -23,17 +23,30 @@ class MakeupRecord {
     }
 }
 
+@Model
+class FacePhoto {
+    var id = UUID()
+    var type: String // e.g., "face" or "eye"
+    var imageData: Data
+
+    init(type: String, imageData: Data) {
+        self.type = type
+        self.imageData = imageData
+    }
+}
+
 
 class CameraLaunchViewModel: ObservableObject {
     @Published var isLaunchedCamera = false
     @Published var imageData = Data()
+    @Published var capturedType: String? = nil
 }
 
 struct InputMakeupView: View {
     
     //カテゴリとか種別のものはenumの方が可読性が良い！
     enum SelectionType {
-        case eye, lip, highlight, eyebrow, base, cheek, mascara, eyeshadow, eyeliner,colorlense
+        case eye, lip, highlight, eyebrow, base, cheek, mascara, eyeshadow, eyeliner, colorlense
     }
     
     @State var makeName: String = ""
@@ -65,6 +78,7 @@ struct InputMakeupView: View {
     @Environment(\.dismiss) private var dismiss
     @Binding var path: NavigationPath
     @Query private var cosmetics: [Cosmetic]
+    @Query private var facePhotos: [FacePhoto]
 
 var pickerOptions: [String] {
     let options = Array(Set(cosmetics.map { $0.listProduct }))
@@ -406,6 +420,14 @@ var pickerOptions: [String] {
                                 .position(x: 340, y: 170) // アイライン
                             }
                         }else if imageIndex == 2 {
+                            // Show the face image if available
+                            if let faceImage = facePhotos.first(where: { $0.type == "face" }), let uiImage = UIImage(data: faceImage.imageData) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 300, height: 300)
+                                    .cornerRadius(10)
+                            }
                             VStack {
                                 Spacer()
                                 Button("顔全体の写真") {
@@ -421,6 +443,7 @@ var pickerOptions: [String] {
                                     Button("はい") {
                                         showAlert = false
                                         viewModel.isLaunchedCamera = true
+                                        viewModel.capturedType = "face"
                                     }
                                     //ダイアログ内で行う処理
                                 } message: {
@@ -430,7 +453,22 @@ var pickerOptions: [String] {
                             .fullScreenCover(isPresented: $viewModel.isLaunchedCamera) {
                                 Imagepicker(show: $viewModel.isLaunchedCamera, image: $viewModel.imageData)
                             }
+                            .onChange(of: viewModel.imageData) { newData in
+                                guard let type = viewModel.capturedType, !newData.isEmpty else { return }
+                                let photo = FacePhoto(type: type, imageData: newData)
+                                modelContext.insert(photo)
+                                try? modelContext.save()
+                                viewModel.capturedType = nil
+                            }
                         }else if imageIndex == 3 {
+                            // Show the eye image02 if available
+                            if let eyeImage = facePhotos.first(where: { $0.type == "eye" }), let uiImage = UIImage(data: eyeImage.imageData) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 400, height: 350)
+                                    .cornerRadius(10)
+                            }
                             VStack {
                                 Spacer()
                                 Button("目元の写真") {
@@ -446,13 +484,23 @@ var pickerOptions: [String] {
                                     Button("はい") {
                                         showAlert = false
                                         viewModel.isLaunchedCamera = true
+                                        viewModel.capturedType = "eye"
                                     }
                                     //ダイアログ内で行う処理
                                 } message: {
                                     Text("フラッシュをたこう！")
                                 }
                             }
-                            
+                            .fullScreenCover(isPresented: $viewModel.isLaunchedCamera) {
+                                Imagepicker(show: $viewModel.isLaunchedCamera, image: $viewModel.imageData)
+                            }
+                            .onChange(of: viewModel.imageData) { newData in
+                                guard let type = viewModel.capturedType, !newData.isEmpty else { return }
+                                let photo = FacePhoto(type: type, imageData: newData)
+                                modelContext.insert(photo)
+                                try? modelContext.save()
+                                viewModel.capturedType = nil
+                            }
                         }
                     }
                 Spacer()
