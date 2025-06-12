@@ -13,6 +13,7 @@ struct SavedMakeListView: View {
     @Query private var savedRecords: [MakeupRecord]
     @State private var cards: [MakeupRecord] = []
     @State private var path = NavigationPath()
+    @Environment(\.modelContext) private var modelContext
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
@@ -48,9 +49,8 @@ struct SavedMakeListView: View {
                     ScrollView {
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                             ForEach(cards, id: \.id) { card in
-                                Button(action: {
-                                    // ここに個別のアクション
-                                }) {
+                                NavigationLink(destination: MakeupDetailView()) {
+                                    //MakeupDetailViewに受け取らせたいものを引数に書く
                                     VStack {
                                         Image("Marichan")
                                             .resizable()
