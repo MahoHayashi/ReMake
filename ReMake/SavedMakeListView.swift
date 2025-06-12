@@ -11,6 +11,7 @@ import SwiftData
 
 struct SavedMakeListView: View {
     @Query private var savedRecords: [MakeupRecord]
+    @Query(filter: #Predicate<FacePhoto> { $0.type == "face" }) private var facePhotos: [FacePhoto]
     @State private var cards: [MakeupRecord] = []
     @State private var path = NavigationPath()
     @Environment(\.modelContext) private var modelContext
@@ -52,11 +53,20 @@ struct SavedMakeListView: View {
                                 NavigationLink(destination: MakeupDetailView()) {
                                     //MakeupDetailViewに受け取らせたいものを引数に書く
                                     VStack {
-                                        Image("Marichan")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .cornerRadius(10)
-                                            .frame(width: 150, height: 150)
+                                        if let facePhotoData = facePhotos.first(where: { $0.makeupRecordID == card.id })?.imageData,
+                                           let uiImage = UIImage(data: facePhotoData) {
+                                            Image(uiImage: uiImage)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .cornerRadius(10)
+                                                .frame(width: 150, height: 150)
+                                        } else {
+                                            Image("Marichan")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .cornerRadius(10)
+                                                .frame(width: 150, height: 150)
+                                        }
                                         Text(card.name)
                                         Text("どうも")
                                     }
