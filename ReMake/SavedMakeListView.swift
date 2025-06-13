@@ -52,11 +52,19 @@ struct SavedMakeListView: View {
                                 NavigationLink(destination: MakeupDetailView()) {
                                     //MakeupDetailViewに受け取らせたいものを引数に書く
                                     VStack {
-                                        Image("Marichan")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .cornerRadius(10)
-                                            .frame(width: 150, height: 150)
+                                        if let data = card.faceImageData, let uiImage = UIImage(data: data) {
+                                            Image(uiImage: uiImage)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .cornerRadius(10)
+                                                .frame(width: 150, height: 150)
+                                        } else {
+                                            Image("Marichan")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .cornerRadius(10)
+                                                .frame(width: 150, height: 150)
+                                        }
                                         Text(card.name)
                                         Text("どうも")
                                     }

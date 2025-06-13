@@ -15,25 +15,18 @@ class MakeupRecord {
     var name: String
     var comment: String
     var url: String
+    var faceImageData: Data?
+    var eyeImageData: Data?
 
-    init(name: String, comment: String, url: String) {
+    init(name: String, comment: String, url: String, faceImageData: Data? = nil, eyeImageData: Data? = nil) {
         self.name = name
         self.comment = comment
         self.url = url
+        self.faceImageData = faceImageData
+        self.eyeImageData = eyeImageData
     }
 }
 
-@Model
-class FacePhoto {
-    var id = UUID()
-    var type: String // e.g., "face" or "eye"
-    var imageData: Data
-
-    init(type: String, imageData: Data) {
-        self.type = type
-        self.imageData = imageData
-    }
-}
 
 
 class CameraLaunchViewModel: ObservableObject {
@@ -82,7 +75,6 @@ struct InputMakeupView: View {
     @Environment(\.dismiss) private var dismiss
     @Binding var path: NavigationPath
     @Query private var cosmetics: [Cosmetic]
-    @Query private var facePhotos: [FacePhoto]
 
 var pickerOptions: [String] {
     let options = Array(Set(cosmetics.map { $0.listProduct }))
@@ -114,24 +106,24 @@ var pickerOptions: [String] {
                 HStack {
                     Spacer()
                     Button {
-                        let record = MakeupRecord(name: makeName, comment: comment, url: URLcomment)
+                        let record = MakeupRecord(
+                            name: makeName,
+                            comment: comment,
+                            url: URLcomment,
+                            faceImageData: tempFaceImageData,
+                            eyeImageData: tempEyeImageData
+                        )
                         modelContext.insert(record)
-                        // SwiftData への保存処理
-                        if let data = tempFaceImageData {
-                            let facePhoto = FacePhoto(type: "face", imageData: data)
-                            modelContext.insert(facePhoto)
+                        do {
+                            try modelContext.save()
+                        } catch {
+                            print("保存に失敗しました: \(error)")
                         }
-                        if let data = tempEyeImageData {
-                            let eyePhoto = FacePhoto(type: "eye", imageData: data)
-                            modelContext.insert(eyePhoto)
-                        }
-                        try? modelContext.save()
                         viewModel.imageData = Data()
                         viewModel.capturedType = nil
                         tempFaceImageData = nil
                         tempEyeImageData = nil
                         path.removeLast()
-                        //dismiss() NavigationLinkを使っている場合はむり
                     } label: {
                         Text("完了")
                             .padding(.trailing, 20)

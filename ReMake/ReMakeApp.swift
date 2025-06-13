@@ -14,6 +14,6 @@ struct ReMakeApp: App {
             MainTabView()
         }
         //複数のModelクラスを使うのでmodelContainerに使用する全てのモデルクラスを列挙して指定する必要がある
-        .modelContainer(for: [Cosmetic.self,MakeupRecord.self,FacePhoto.self])
+        .modelContainer(for: [Cosmetic.self,MakeupRecord.self])
     }
 }
