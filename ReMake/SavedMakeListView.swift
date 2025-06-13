@@ -49,7 +49,7 @@ struct SavedMakeListView: View {
                     ScrollView {
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                             ForEach(cards, id: \.id) { card in
-                                NavigationLink(destination: MakeupDetailView()) {
+                                NavigationLink(destination: MakeupDetailView(record: card)) {
                                     //MakeupDetailViewに受け取らせたいものを引数に書く
                                     VStack {
                                         if let data = card.faceImageData, let uiImage = UIImage(data: data) {

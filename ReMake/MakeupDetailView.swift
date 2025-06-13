@@ -57,15 +57,18 @@ struct  MakeupDetailView: View {
     @State private var currentSelection: SelectionType? = nil
     @State private var sheetTitle: String = ""
     @State private var selectedItems: [SelectionType: String] = [:]
-
-    @StateObject private var viewModel = CameraLaunchViewModel()
+    
+    let record: MakeupRecord
+    
+    
+//    @StateObject private var viewModel = CameraLaunchViewModel()
 
     // 追加: 撮影後のデータ一時保存
-    @State private var tempFaceImageData: Data? = nil
-    @State private var tempEyeImageData: Data? = nil
+//    @State private var tempFaceImageData: Data? = nil
+//    @State private var tempEyeImageData: Data? = nil
 
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
+//    @Environment(\.modelContext) private var modelContext
+//    @Environment(\.dismiss) private var dismiss
 //    @Binding var path: NavigationPath
     @Query private var cosmetics: [Cosmetic]
 
@@ -505,29 +508,54 @@ struct  MakeupDetailView: View {
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 50)
-                TextField("メイクのタイトルを入力してください", text: $makeName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .frame(width: 300, height: 45)
+                    .padding()
+                Text("\(record.name)")
+                    .background(Color.white) // 背景色
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                                .stroke(Color.gray, lineWidth: 1)
+                                .frame(width: 300, height: 45)//枠線の色と太さ
+                        )
+                    
+//                TextField("メイクのタイトルを入力してください", text: $makeName)
+//                    .textFieldStyle(RoundedBorderTextFieldStyle())
+//                    .frame(width: 300, height: 45)
                 Text("コメント")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 50)
-                TextField("コメントを入力してください", text: $comment)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .frame(width: 300, height: 45)
+                    .padding()
+                Text("\(record.comment)")
+                    .background(Color.white) // 背景色
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                                .stroke(Color.gray, lineWidth: 1)
+                                .frame(width: 300, height: 45)//枠線の色と太さ
+                        )
+//                TextField("コメントを入力してください", text: $comment)
+//                    .textFieldStyle(RoundedBorderTextFieldStyle())
+//                    .frame(width: 300, height: 45)
                 Text("参考にした記事・動画のURL")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 50)
-                TextField("URLを入力してください", text: $URLcomment)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .frame(width: 300, height: 45)
+                    .padding()
+                Text("\(record.url)")
+                    .background(Color.white) // 背景色
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                                .stroke(Color.gray, lineWidth: 1)
+                                .frame(width: 300, height: 45)//枠線の色と太さ
+                        )
+//                TextField("URLを入力してください", text: $URLcomment)
+//                    .textFieldStyle(RoundedBorderTextFieldStyle())
+//                    .frame(width: 300, height: 45)
                 
                 Spacer()
                 Spacer()
                 Spacer()
                 Spacer()
-                Spacer()
+               
             }
         }
         // .onChangeで撮影後のデータを一時保存
@@ -544,5 +572,12 @@ struct  MakeupDetailView: View {
 }
 
 #Preview {
-    MakeupDetailView()
+    let dummyData = MakeupRecord(
+            name: "春のナチュラルメイク",
+            comment: "ピンクを基調にしてナチュラルに仕上げました。",
+            url: "https://example.com/spring-makeup",
+            faceImageData: nil,
+            eyeImageData: nil
+        )
+        return MakeupDetailView(record: dummyData)
 }
