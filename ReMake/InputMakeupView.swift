@@ -129,7 +129,11 @@ var pickerOptions: [String] {
                         path.removeLast()
                     } label: {
                         Text("完了")
-                            .padding(.trailing, 20)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .background(.pink)
+                            .cornerRadius(20)
                     }
                 }
                     //イニシャライザに渡す

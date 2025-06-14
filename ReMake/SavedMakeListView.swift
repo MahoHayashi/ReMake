@@ -57,7 +57,7 @@ struct SavedMakeListView: View {
                                                 .resizable()
                                                 .scaledToFit()
                                                 .cornerRadius(10)
-                                                .frame(width: 150, height: 150)
+                                                .frame(width: 170, height: 170)
                                         } else {
                                             Image("Marichan")
                                                 .resizable()
@@ -66,9 +66,10 @@ struct SavedMakeListView: View {
                                                 .frame(width: 150, height: 150)
                                         }
                                         Text(card.name)
-                                        Text("どうも")
+                                            .bold()
+                                            .foregroundColor(.black)
                                     }
-                                    .frame(width: 150, height: 230)
+                                    .frame(width: 130, height: 200)
                                     .padding()
                                     .background(.white)
                                     .cornerRadius(20)
