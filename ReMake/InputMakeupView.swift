@@ -17,6 +17,7 @@ class MakeupRecord {
     var url: String
     var faceImageData: Data?
     var eyeImageData: Data?
+    var selectedItems: [String: String] = [:]
 
     init(name: String, comment: String, url: String, faceImageData: Data? = nil, eyeImageData: Data? = nil) {
         self.name = name
@@ -113,6 +114,8 @@ var pickerOptions: [String] {
                             faceImageData: tempFaceImageData,
                             eyeImageData: tempEyeImageData
                         )
+                        // Convert [SelectionType: String] to [String: String]
+                        record.selectedItems = Dictionary(uniqueKeysWithValues: selectedItems.map { (key, value) in (String(describing: key), value) })
                         modelContext.insert(record)
                         do {
                             try modelContext.save()
