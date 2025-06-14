@@ -134,11 +134,12 @@ struct  MakeupDetailView: View {
 //                }
                     //イニシャライザに渡す
                     ZStack {
-                        ImagePager(imageNames: [
-                            "MakeupFace",
-                            "EyeImage",
-                            "pinkPaper",
-                            "morepinkPaper"
+                        ImagePager(images: [
+                            .named("MakeupFace"),
+                            .named("EyeImage"),
+                            //データが存在しない場合はデフォルトの空の画像を表示する
+                            .uiImage(record.faceImageData != nil ? UIImage(data: record.faceImageData!) ?? UIImage() : UIImage()),
+                            .uiImage(record.eyeImageData != nil ? UIImage(data: record.eyeImageData!) ?? UIImage() : UIImage())
                         ], index: $imageIndex)
                         .frame(width: 370, height: 370)
                         

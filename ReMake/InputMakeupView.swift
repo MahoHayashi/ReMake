@@ -131,11 +131,11 @@ var pickerOptions: [String] {
                 }
                     //イニシャライザに渡す
                     ZStack {
-                        ImagePager(imageNames: [
-                            "MakeupFace",
-                            "EyeImage",
-                            "pinkPaper",
-                            "morepinkPaper"
+                        ImagePager(images: [
+                            .named("MakeupFace"),
+                            .named("EyeImage"),
+                            .named("pinkPaper"),
+                            .named("morepinkPaper")
                         ], index: $imageIndex)
                         .frame(width: 370, height: 370)
                         
