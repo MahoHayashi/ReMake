@@ -6,17 +6,19 @@
 //
 
 import SwiftUI
+import Foundation
+import SwiftData
 
 struct SavedMakeListView: View {
-    @State private var isShowingInputView = false
+    @Query private var savedRecords: [MakeupRecord]
+    @State private var cards: [MakeupRecord] = []
+    @State private var path = NavigationPath()
+    @Environment(\.modelContext) private var modelContext
     var body: some View {
-        NavigationView {
+        NavigationStack(path: $path) {
             ZStack {
                 // NavigationLink for navigation
-                NavigationLink(destination: InputMakeupView(), isActive: $isShowingInputView) {
-                    EmptyView()
-                }
-                VStack {
+                VStack(spacing: 0) {
                     HStack {
                         Button {
                             
@@ -32,7 +34,7 @@ struct SavedMakeListView: View {
                         }
                         Spacer()
                         Button(action: {
-                            isShowingInputView = true
+                            path.append("input")
                         }) {
                             Image(systemName: "plus")
                                 .font(.system(size: 24))
@@ -42,7 +44,50 @@ struct SavedMakeListView: View {
                         }
                         .padding(.trailing, 20)
                     }
-                    Spacer()
+                    .padding(.vertical, 8)
+
+                    ScrollView {
+                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                            ForEach(cards, id: \.id) { card in
+                                NavigationLink(destination: MakeupDetailView(record: card)) {
+                                    //MakeupDetailViewに受け取らせたいものを引数に書く
+                                    VStack {
+                                        if let data = card.faceImageData, let uiImage = UIImage(data: data) {
+                                            Image(uiImage: uiImage)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .cornerRadius(10)
+                                                .frame(width: 170, height: 170)
+                                        } else {
+                                            Image("Marichan")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .cornerRadius(10)
+                                                .frame(width: 150, height: 150)
+                                        }
+                                        Text(card.name)
+                                            .bold()
+                                            .foregroundColor(.black)
+                                    }
+                                    .frame(width: 130, height: 200)
+                                    .padding()
+                                    .background(.white)
+                                    .cornerRadius(20)
+                                    .clipped()
+                                    .shadow(color: .gray.opacity(0.7), radius: 5)
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                }
+            }
+            .onAppear {
+                cards = savedRecords
+            }
+            .navigationDestination(for: String.self) { value in
+                if value == "input" {
+                    InputMakeupView(path: $path)
                 }
             }
         }
