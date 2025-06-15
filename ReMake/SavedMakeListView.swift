@@ -44,7 +44,8 @@ struct SavedMakeListView: View {
                         ZStack(alignment: .topTrailing) {
                             
                             if isComparisonMode {
-                                NavigationLink(destination: CompareMakeupView(/*records: cards.filter { selectedCardIDs.contains($0.id) }*/), isActive: $showComparisonView) {
+                                /*filter は **「条件を満たす要素だけを抽出する」**ときに使う*/
+                                NavigationLink(destination: CompareMakeupView(records: cards.filter { selectedCardIDs.contains($0.id) }), isActive: $showComparisonView) {
                                     EmptyView()
                                 }
                                 .hidden()
