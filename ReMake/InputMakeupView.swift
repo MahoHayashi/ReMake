@@ -138,13 +138,24 @@ var pickerOptions: [String] {
                 }
                     //イニシャライザに渡す
                     ZStack {
-                        ImagePager(images: [
-                            .named("MakeupFace"),
-                            .named("EyeImage"),
-                            .named("pinkPaper"),
-                            .named("morepinkPaper")
-                        ], index: $imageIndex)
-                        .frame(width: 370, height: 370)
+                        VStack{
+                            ImagePager(images: [
+                                .named("MakeupFace"),
+                                .named("EyeImage"),
+                                .named("pinkPaper"),
+                                .named("morepinkPaper")
+                            ], index: $imageIndex)
+                            .frame(width: 370, height: 370)
+                            
+                            HStack(spacing: 8) {
+                                ForEach(0..<4, id: \.self) { i in
+                                    Circle()
+                                        .fill(i == imageIndex ? Color.primary : Color.secondary.opacity(0.4))
+                                        .frame(width: 8, height: 8)
+                                }
+                            }
+                        }
+                        .padding(.top, 8)
                         
                         if imageIndex == 0 {
                             // Add six plus buttons over the image with selected value display

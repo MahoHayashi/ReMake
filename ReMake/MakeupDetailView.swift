@@ -66,13 +66,24 @@ struct  MakeupDetailView: View {
             Spacer()
             VStack {
                 ZStack {
-                    ImagePager(images: [
-                        .named("MakeupFace"),
-                        .named("EyeImage"),
-                        .uiImage(record.faceImageData != nil ? UIImage(data: record.faceImageData!) ?? UIImage() : UIImage()),
-                        .uiImage(record.eyeImageData != nil ? UIImage(data: record.eyeImageData!) ?? UIImage() : UIImage())
-                    ], index: $imageIndex)
-                    .frame(width: 370, height: 370)
+                    VStack{
+                        ImagePager(images: [
+                            .named("MakeupFace"),
+                            .named("EyeImage"),
+                            .uiImage(record.faceImageData != nil ? UIImage(data: record.faceImageData!) ?? UIImage() : UIImage()),
+                            .uiImage(record.eyeImageData != nil ? UIImage(data: record.eyeImageData!) ?? UIImage() : UIImage())
+                        ], index: $imageIndex)
+                        .frame(width: 370, height: 370)
+                        
+                        HStack(spacing: 8) {
+                            ForEach(0..<4, id: \.self) { i in
+                                Circle()
+                                    .fill(i == imageIndex ? Color.primary : Color.secondary.opacity(0.4))
+                                    .frame(width: 8, height: 8)
+                            }
+                        }
+                        .padding(.top, 16)
+                    }
                     
                     if imageIndex == 0 {
                         VStack(spacing: 0) {
