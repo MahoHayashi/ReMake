@@ -15,15 +15,26 @@ struct CompareMakeupView: View {
     var body: some View {
         
         ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 30) {
+            VStack(spacing: 10) {
                 ForEach(records, id: \.id) { record in
+                    Text(record.name)
+                        .bold()
+                        .font(.headline)
+                        .background(Color.white) // 背景色
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(Color.gray, lineWidth: 1)
+                                    .frame(width: 280, height: 30)//枠線の色と太さ
+                            )
                     ImagePager(images: [
                         .named("MakeupFace"),
                         .named("EyeImage"),
                         .uiImage(record.faceImageData != nil ? UIImage(data: record.faceImageData!) ?? UIImage() : UIImage()),
                         .uiImage(record.eyeImageData != nil ? UIImage(data: record.eyeImageData!) ?? UIImage() : UIImage())
                     ], index: $imageIndex)
-                    .frame(width: 300, height: 300)
+                    .frame(width: 280, height: 280)
+                    
+                    Spacer().frame(height: 15)
                 }
             }
         }
