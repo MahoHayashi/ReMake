@@ -2,35 +2,8 @@ import SwiftUI
 import Foundation
 import SwiftData
 
-//@Model
-//class MakeupRecord {
-//    var id = UUID()
-//    var name: String
-//    var comment: String
-//    var url: String
-//    var faceImageData: Data?
-//    var eyeImageData: Data?
-//
-//    init(name: String, comment: String, url: String, faceImageData: Data? = nil, eyeImageData: Data? = nil) {
-//        self.name = name
-//        self.comment = comment
-//        self.url = url
-//        self.faceImageData = faceImageData
-//        self.eyeImageData = eyeImageData
-//    }
-//}
-//
-//
-//
-//class CameraLaunchViewModel: ObservableObject {
-//    @Published var isLaunchedCamera = false
-//    @Published var imageData = Data()
-//    @Published var capturedType: String? = nil
-//}
-
 struct  MakeupDetailView: View {
     
-    //カテゴリとか種別のものはenumの方が可読性が良い！
     enum SelectionType: String {
         case eye, lip, highlight, eyebrow, base, cheek, mascara, eyeshadow, eyeliner, colorlense
     }
@@ -60,7 +33,6 @@ struct  MakeupDetailView: View {
     
     let record: MakeupRecord
 
-    // MARK: - Custom initializer to map selectedItems
     init(record: MakeupRecord) {
         self.record = record
         var mapped: [SelectionType: String] = [:]
@@ -71,27 +43,9 @@ struct  MakeupDetailView: View {
         }
         _selectedItems = State(initialValue: mapped)
     }
-    
-    
-//    @StateObject private var viewModel = CameraLaunchViewModel()
-
-    // 追加: 撮影後のデータ一時保存
-//    @State private var tempFaceImageData: Data? = nil
-//    @State private var tempEyeImageData: Data? = nil
-
-//    @Environment(\.modelContext) private var modelContext
-//    @Environment(\.dismiss) private var dismiss
-//    @Binding var path: NavigationPath
     @Query private var cosmetics: [Cosmetic]
-
-//var pickerOptions: [String] {
-//    let options = Array(Set(cosmetics.map { $0.listProduct }))
-//    //なにもコスメが登録されていない場合の処理
-//    return options.isEmpty ? ["（登録されたコスメがありません）"] : options
-//}
     
     func bindingForCurrentSelection() -> Binding<String> {
-        //enumとswitch文は相性が良い！
         switch currentSelection {
         case .eye: return $selectedEye
         case .lip: return $selectedLip
@@ -111,418 +65,129 @@ struct  MakeupDetailView: View {
         ZStack{
             Spacer()
             VStack {
-//                HStack {
-//                    Spacer()
-//                    Button {
-//                        let record = MakeupRecord(
-//                            name: makeName,
-//                            comment: comment,
-//                            url: URLcomment,
-//                            faceImageData: tempFaceImageData,
-//                            eyeImageData: tempEyeImageData
-//                        )
-//                        modelContext.insert(record)
-//                        do {
-//                            try modelContext.save()
-//                        } catch {
-//                            print("保存に失敗しました: \(error)")
-//                        }
-//                        viewModel.imageData = Data()
-//                        viewModel.capturedType = nil
-//                        tempFaceImageData = nil
-//                        tempEyeImageData = nil
-//                        path.removeLast()
-//                    } label: {
-//                        //押しにくかったからボタン大きくした後でUI整えた
-//                        Text("完了")
-//                            .font(.system(size: 25))
-//                            .font(.headline)
-//                            .frame(width: 80, height: 55)
-//                            .foregroundColor(.white)
-//                            .background(.pink)
-//                            .cornerRadius(20)
-//                            .padding(.trailing, 20)
-//                    }
-//                }
-                    //イニシャライザに渡す
-                    ZStack {
-                        ImagePager(images: [
-                            .named("MakeupFace"),
-                            .named("EyeImage"),
-                            //データが存在しない場合はデフォルトの空の画像を表示する
-                            .uiImage(record.faceImageData != nil ? UIImage(data: record.faceImageData!) ?? UIImage() : UIImage()),
-                            .uiImage(record.eyeImageData != nil ? UIImage(data: record.eyeImageData!) ?? UIImage() : UIImage())
-                        ], index: $imageIndex)
-                        .frame(width: 370, height: 370)
-                        
-                        if imageIndex == 0 {
-//                            // Add six plus buttons over the image with selected value display
-//                            // Example for .lip
+                ZStack {
+                    ImagePager(images: [
+                        .named("MakeupFace"),
+                        .named("EyeImage"),
+                        .uiImage(record.faceImageData != nil ? UIImage(data: record.faceImageData!) ?? UIImage() : UIImage()),
+                        .uiImage(record.eyeImageData != nil ? UIImage(data: record.eyeImageData!) ?? UIImage() : UIImage())
+                    ], index: $imageIndex)
+                    .frame(width: 370, height: 370)
+                    
+                    if imageIndex == 0 {
+                        VStack(spacing: 0) {
+                            if let value = selectedItems[.lip], !value.isEmpty {
+                                Text(value)
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                                    .padding(4)
+                                    .background(Color.white.opacity(0.6))
+                                    .cornerRadius(6)
+                                    .offset(y: -20)
+                            }
+                        }
+                        .position(x: 218, y: 285)
+                        VStack(spacing: 0) {
+                            if let value = selectedItems[.highlight], !value.isEmpty {
+                                Text(value)
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                                    .padding(4)
+                                    .background(Color.white.opacity(0.6))
+                                    .cornerRadius(6)
+                                    .offset(y: -20)
+                            }
+                        }
+                        .position(x: 204, y: 205)
+                        VStack(spacing: 0) {
+                            if let value = selectedItems[.eyebrow], !value.isEmpty {
+                                Text(value)
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                                    .padding(4)
+                                    .background(Color.white.opacity(0.6))
+                                    .cornerRadius(6)
+                                    .offset(y: -20)
+                            }
+                        }
+                        .position(x: 278, y: 152)
+                        VStack(spacing: 0) {
+                            if let value = selectedItems[.base], !value.isEmpty {
+                                Text(value)
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                                    .padding(4)
+                                    .background(Color.white.opacity(0.6))
+                                    .cornerRadius(6)
+                                    .offset(y: -20)
+                            }
+                        }
+                        .position(x: 135, y: 247)
+                        VStack(spacing: 0) {
+                            if let value = selectedItems[.cheek], !value.isEmpty {
+                                Text(value)
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                                    .padding(4)
+                                    .background(Color.white.opacity(0.6))
+                                    .cornerRadius(6)
+                                    .offset(y: -20)
+                            }
+                        }
+                        .position(x: 270, y: 230)
+                    }else if imageIndex == 1 {
+                        ZStack {
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.lip], !value.isEmpty {
+                                if let value = selectedItems[.eyeshadow], !value.isEmpty {
                                     Text(value)
                                         .font(.caption)
                                         .foregroundColor(.gray)
                                         .padding(4)
                                         .background(Color.white.opacity(0.6))
                                         .cornerRadius(6)
-                                        .offset(y: -20)
+                                        .offset(y: -30)
                                 }
-//                                Button(action: {
-////                                    sheetTitle = "リップを選択"
-////                                    currentSelection = .lip
-////                                    showPickerSheet = true
-//                                }) {
-//                                    Image(systemName: "plus.circle")
-//                                        .resizable()
-//                                        .frame(width: 24, height: 24)
-//                                        .foregroundColor(.secondary)
-//                                }
                             }
-                            .position(x: 218, y: 285) //リップ
-//
+                            .position(x: 150, y: 90)
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.highlight], !value.isEmpty {
+                                if let value = selectedItems[.mascara], !value.isEmpty {
                                     Text(value)
                                         .font(.caption)
                                         .foregroundColor(.gray)
                                         .padding(4)
                                         .background(Color.white.opacity(0.6))
                                         .cornerRadius(6)
-                                        .offset(y: -20)
+                                        .offset(y: -30)
                                 }
-//                                Button(action: {
-////                                    sheetTitle = "ハイライト・シェーディングを選択"
-////                                    currentSelection = .highlight
-////                                    showPickerSheet = true
-//                                }) {
-//                                    Image(systemName: "plus.circle")
-//                                        .resizable()
-//                                        .frame(width: 24, height: 24)
-//                                        .foregroundColor(.secondary)
-//                                }
                             }
-                            .position(x: 204, y: 205) //ハイライト・シェーディング
-//
+                            .position(x: 273, y: 90)
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.eyebrow], !value.isEmpty {
+                                if let value = selectedItems[.colorlense], !value.isEmpty {
                                     Text(value)
                                         .font(.caption)
                                         .foregroundColor(.gray)
                                         .padding(4)
                                         .background(Color.white.opacity(0.6))
                                         .cornerRadius(6)
-                                        .offset(y: -20)
+                                        .offset(y: -30)
                                 }
-//                                if let value = selectedItems[.eyebrow], !value.isEmpty {
-//                                    Text(value)
-//                                        .font(.caption)
-//                                        .foregroundColor(.gray)
-//                                        .padding(4)
-//                                        .background(Color.white.opacity(0.6))
-//                                        .cornerRadius(6)
-//                                        .offset(y: -20)
-//                                }
-//                                Button(action: {
-//                                    sheetTitle = "アイブロウを選択"
-//                                    currentSelection = .eyebrow
-//                                    showPickerSheet = true
-//                                }) {
-//                                    Image(systemName: "plus.circle")
-//                                        .resizable()
-//                                        .frame(width: 24, height: 24)
-//                                        .foregroundColor(.secondary)
-//                                }
                             }
-                            .position(x: 278, y: 152) //アイブロウ
-//                            .sheet(isPresented: $showPickerSheet) {
-//                                VStack {
-//                                    Text(sheetTitle)
-//                                        .font(.headline)
-//                                        .padding()
-//                                    Picker("選択", selection: bindingForCurrentSelection()) {
-//                                        ForEach(pickerOptions, id: \.self) { option in
-//                                            Text(option)
-//                                        }
-//                                    }
-//                                    .pickerStyle(.wheel)
-//                                    .padding()
-//                                    HStack {
-//
-//                                        Button("キャンセル") {
-//                                            showPickerSheet = false
-//                                        }
-//                                        .padding(.leading, 16)
-//                                        Spacer()
-//                                        Button("完了") {
-//                                            if let selection = currentSelection {
-//                                                selectedItems[selection] = bindingForCurrentSelection().wrappedValue
-//                                            }
-//                                            showPickerSheet = false
-//                                        }
-//                                    }
-//                                    .padding(.leading, 16)
-//                                    .padding(.trailing, 40)
-//                                }
-//                                .presentationDetents([
-//                                    .medium,
-//                                    .large,
-//                                    .height(300),
-//                                    .fraction(0.8)
-//                                ])
-//                            }
-//
+                            .position(x: 196, y: 190)
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.base], !value.isEmpty {
+                                if let value = selectedItems[.eyeliner], !value.isEmpty {
                                     Text(value)
                                         .font(.caption)
                                         .foregroundColor(.gray)
                                         .padding(4)
                                         .background(Color.white.opacity(0.6))
                                         .cornerRadius(6)
-                                        .offset(y: -20)
+                                        .offset(y: -30)
                                 }
-//                                Button(action: {
-//                                    sheetTitle = "ベースメイクを選択"
-//                                    currentSelection = .base
-////                                    showPickerSheet = true
-//                                }) {
-//                                    Image(systemName: "plus.circle")
-//                                        .resizable()
-//                                        .frame(width: 24, height: 24)
-//                                        .foregroundColor(.secondary)
-//                                }
                             }
-                            .position(x: 135, y: 247) //ベースメイク
-//
-                            VStack(spacing: 0) {
-                                if let value = selectedItems[.cheek], !value.isEmpty {
-                                    Text(value)
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .padding(4)
-                                        .background(Color.white.opacity(0.6))
-                                        .cornerRadius(6)
-                                        .offset(y: -20)
-                                }
-//                                Button(action: {
-//                                    sheetTitle = "チークを選択"
-//                                    currentSelection = .cheek
-//                                    showPickerSheet = true
-//                                }) {
-//                                    Image(systemName: "plus.circle")
-//                                        .resizable()
-//                                        .frame(width: 24, height: 24)
-//                                        .foregroundColor(.secondary)
-//                                }
-                            }
-                            .position(x: 270, y: 230) //チーク
-                        }else if imageIndex == 1 {
-                            ZStack {
-                                VStack(spacing: 0) {
-                                    if let value = selectedItems[.eyeshadow], !value.isEmpty {
-                                        Text(value)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -30)
-                                    }
-//                                    Button(action: {
-//                                        currentSelection = .eyeshadow
-//                                        sheetTitle = "アイシャドウを選択"
-//                                        showPickerSheet = true
-//                                    }) {
-//                                        Image(systemName: "plus.circle")
-//                                            .resizable()
-//                                            .frame(width: 40, height: 40)
-//                                            .foregroundColor(.pink)
-//                                    }
-                                }
-                                .position(x: 150, y: 90)
-//                                .sheet(isPresented: $showPickerSheet) {
-//                                    VStack {
-//                                        Text(sheetTitle)
-//                                            .font(.headline)
-//                                            .padding()
-//                                        Picker("選択", selection: bindingForCurrentSelection()) {
-//                                            ForEach(pickerOptions, id: \.self) { option in
-//                                                Text(option)
-//                                            }
-//                                        }
-//                                        .pickerStyle(.wheel)
-//                                        .padding()
-//                                        HStack {
-//
-//                                            Button("キャンセル") {
-//                                                showPickerSheet = false
-//                                            }
-//                                            .padding(.leading, 16)
-//                                            Spacer()
-//                                            Button("完了") {
-//                                                if let selection = currentSelection {
-//                                                    selectedItems[selection] = bindingForCurrentSelection().wrappedValue
-//                                                }
-//                                                showPickerSheet = false
-//                                            }
-//                                        }
-//                                        .padding(.leading, 16)
-//                                        .padding(.trailing, 40)
-//                                    }
-//                                    .presentationDetents([
-//                                        .medium,
-//                                        .large,
-//                                        .height(300),
-//                                        .fraction(0.8)
-//                                    ])
-//                                }//アイシャドウ
-//
-                                VStack(spacing: 0) {
-                                    if let value = selectedItems[.mascara], !value.isEmpty {
-                                        Text(value)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -30)
-                                    }
-//                                    Button(action: {
-//                                        currentSelection = .mascara
-//                                        sheetTitle = "マスカラを選択"
-//                                        showPickerSheet = true
-//                                    }) {
-//                                        Image(systemName: "plus.circle")
-//                                            .resizable()
-//                                            .frame(width: 40, height: 40)
-//                                            .foregroundColor(.pink)
-//                                    }
-                                }
-                                .position(x: 273, y: 90) // マスカラ
-//
-                                VStack(spacing: 0) {
-                                    if let value = selectedItems[.colorlense], !value.isEmpty {
-                                        Text(value)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -30)
-                                    }
-//                                    Button(action: {
-//                                        currentSelection = .colorlense
-//                                        sheetTitle = "カラコンを選択"
-////                                        showPickerSheet = true
-//                                    }) {
-//                                        Image(systemName: "plus.circle")
-//                                            .resizable()
-//                                            .frame(width: 40, height: 40)
-//                                            .foregroundColor(.pink)
-//                                    }
-                                }
-                                .position(x: 196, y: 190) // カラコン
-//
-                                VStack(spacing: 0) {
-                                    if let value = selectedItems[.eyeliner], !value.isEmpty {
-                                        Text(value)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -30)
-                                    }
-//                                    Button(action: {
-//                                        currentSelection = .eyeliner
-//                                        sheetTitle = "アイラインを選択"
-//                                        showPickerSheet = true
-//                                    }) {
-//                                        Image(systemName: "plus.circle")
-//                                            .resizable()
-//                                            .frame(width: 40, height: 40)
-//                                            .foregroundColor(.pink)
-//                                    }
-                                }
-                                .position(x: 340, y: 170) // アイライン
-                            }
-//                        }else if imageIndex == 2 {
-//                            // tempFaceImageData の画像表示
-//                            if let data = tempFaceImageData, let uiImage = UIImage(data: data) {
-//                                Button {
-//                                    tempFaceImageData = nil
-//                                } label: {
-//                                    Image(uiImage: uiImage)
-//                                        .resizable()
-//                                        .scaledToFit()
-//                                        .frame(width: 300, height: 300)
-//                                        .cornerRadius(10)
-//                                }
-//                            }
-//                            VStack {
-//                                Spacer()
-//                                Button("顔全体の写真") {
-//                                    showAlert.toggle()
-//                                }
-//                                .bold()
-//                                .font(.system(size: 50))
-//                                .foregroundColor(.black)
-//                                .padding(.top, 20)
-//                                Spacer()
-//                                .alert("顔全体の写真を撮る",isPresented: $showAlert) {
-//                                    Button("キャンセル") {}
-//                                    Button("はい") {
-//                                        showAlert = false
-//                                        viewModel.isLaunchedCamera = true
-//                                        viewModel.capturedType = "face"
-//                                    }
-//                                } message: {
-//                                    Text("フラッシュをたこう！")
-//                                }
-//                            }
-//                            .fullScreenCover(isPresented: $viewModel.isLaunchedCamera) {
-//                                Imagepicker(show: $viewModel.isLaunchedCamera, image: $viewModel.imageData)
-//                            }
-                        }else if imageIndex == 3 {
-//                            // tempEyeImageData の画像表示
-//                            if let data = tempEyeImageData, let uiImage = UIImage(data: data) {
-//                                Button {
-//                                    tempEyeImageData = nil
-//                                } label: {
-//                                    Image(uiImage: uiImage)
-//                                        .resizable()
-//                                        .scaledToFit()
-//                                        .frame(width: 400, height: 350)
-//                                        .cornerRadius(10)
-//                                }
-//                            }
-//                            VStack {
-//                                Spacer()
-//                                Button("目元の写真") {
-//                                    showAlert.toggle()
-//                                }
-//                                .bold()
-//                                .font(.system(size: 50))
-//                                .foregroundColor(.black)
-//                                .padding(.top, 20)
-//                                Spacer()
-//                                .alert("目元の写真を撮る",isPresented: $showAlert) {
-//                                    Button("キャンセル") {}
-//                                    Button("はい") {
-//                                        showAlert = false
-//                                        viewModel.isLaunchedCamera = true
-//                                        viewModel.capturedType = "eye"
-//                                    }
-//                                } message: {
-//                                    Text("フラッシュをたこう！")
-//                                }
-//                            }
-//                            .fullScreenCover(isPresented: $viewModel.isLaunchedCamera) {
-//                                Imagepicker(show: $viewModel.isLaunchedCamera, image: $viewModel.imageData)
-//                            }
+                            .position(x: 340, y: 170)
                         }
                     }
+                }
                 Spacer()
                 Spacer()
                 
@@ -532,46 +197,36 @@ struct  MakeupDetailView: View {
                     .padding(.leading, 50)
                     .padding()
                 Text("\(record.name)")
-                    .background(Color.white) // 背景色
+                    .background(Color.white)
                         .overlay(
                             RoundedRectangle(cornerRadius: 5)
                                 .stroke(Color.gray, lineWidth: 1)
-                                .frame(width: 300, height: 45)//枠線の色と太さ
+                                .frame(width: 300, height: 45)
                         )
-                    
-//                TextField("メイクのタイトルを入力してください", text: $makeName)
-//                    .textFieldStyle(RoundedBorderTextFieldStyle())
-//                    .frame(width: 300, height: 45)
                 Text("コメント")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 50)
                     .padding()
                 Text("\(record.comment)")
-                    .background(Color.white) // 背景色
+                    .background(Color.white)
                         .overlay(
                             RoundedRectangle(cornerRadius: 5)
                                 .stroke(Color.gray, lineWidth: 1)
-                                .frame(width: 300, height: 45)//枠線の色と太さ
+                                .frame(width: 300, height: 45)
                         )
-//                TextField("コメントを入力してください", text: $comment)
-//                    .textFieldStyle(RoundedBorderTextFieldStyle())
-//                    .frame(width: 300, height: 45)
                 Text("参考にした記事・動画のURL")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 50)
                     .padding()
                 Text("\(record.url)")
-                    .background(Color.white) // 背景色
+                    .background(Color.white)
                         .overlay(
                             RoundedRectangle(cornerRadius: 5)
                                 .stroke(Color.gray, lineWidth: 1)
-                                .frame(width: 300, height: 45)//枠線の色と太さ
+                                .frame(width: 300, height: 45)
                         )
-//                TextField("URLを入力してください", text: $URLcomment)
-//                    .textFieldStyle(RoundedBorderTextFieldStyle())
-//                    .frame(width: 300, height: 45)
                 
                 Spacer()
                 Spacer()
@@ -580,16 +235,6 @@ struct  MakeupDetailView: View {
                
             }
         }
-        // .onChangeで撮影後のデータを一時保存
-//        .onChange(of: viewModel.imageData) { newData in
-//            if let type = viewModel.capturedType {
-//                if type == "face" {
-//                    tempFaceImageData = newData
-//                } else if type == "eye" {
-//                    tempEyeImageData = newData
-//                }
-//            }
-//        }
     }
 }
 
