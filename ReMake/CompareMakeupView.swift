@@ -15,7 +15,7 @@ struct CompareMakeupView: View {
     var body: some View {
         
         ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 10) {
+            VStack(spacing: 8) {
                 ForEach(records, id: \.id) { record in
                     let binding = Binding<Int>(
                         get: { imageIndices[record.id] ?? 0 },
@@ -28,16 +28,30 @@ struct CompareMakeupView: View {
                         .overlay(
                             RoundedRectangle(cornerRadius: 5)
                                 .stroke(Color.gray, lineWidth: 1)
-                                .frame(width: 280, height: 30)
+                                .frame(width: 270, height: 25)
                         )
                     ZStack {
-                        ImagePager(images: [
-                            .named("MakeupFace"),
-                            .named("EyeImage"),
-                            .uiImage(record.faceImageData != nil ? UIImage(data: record.faceImageData!) ?? UIImage() : UIImage()),
-                            .uiImage(record.eyeImageData != nil ? UIImage(data: record.eyeImageData!) ?? UIImage() : UIImage())
-                        ], index: binding)
-                        .frame(width: 280, height: 280)
+                        VStack {
+                            ImagePager(images: [
+                                .named("MakeupFace"),
+                                .named("EyeImage"),
+                                .uiImage(record.faceImageData != nil ? UIImage(data: record.faceImageData!) ?? UIImage() : UIImage()),
+                                .uiImage(record.eyeImageData != nil ? UIImage(data: record.eyeImageData!) ?? UIImage() : UIImage())
+                            ], index: binding)
+                        
+                        .frame(width: 270, height: 250)
+                        VStack {
+                            HStack(spacing: 8) {
+                                ForEach(0..<4, id: \.self) { i in
+                                    Circle()
+                                        .fill(i == binding.wrappedValue ? Color.primary : Color.secondary.opacity(0.4))
+                                        .frame(width: 8, height: 8)
+                                }
+                            }
+                            .padding(.top, 15)
+                        }
+                    }
+                        .padding(.top, 4)
                         // Overlays
                         if binding.wrappedValue == 0 {
                             // Face overlays
@@ -118,6 +132,7 @@ struct CompareMakeupView: View {
                         }
                     }
                     .frame(width: 280, height: 280)
+                    
                     
                     Spacer().frame(height: 15)
                 }
