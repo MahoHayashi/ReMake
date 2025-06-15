@@ -124,6 +124,7 @@ struct SavedMakeListView: View {
                                                             .stroke(Color.gray, lineWidth: 2)
                                                         if selectedCardIDs.contains(card.id) {
                                                             Image(systemName: "checkmark")
+                                                                .font(.system(size: 30))
                                                                 .foregroundColor(.pink)
                                                         }
                                                     }
