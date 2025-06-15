@@ -20,6 +20,7 @@ struct SavedMakeListView: View {
     @State private var selectedCardIDs: Set<UUID> = []
     @State private var showAlert = false
     @State private var compareBeforeWord: String = "比較"
+    @State private var showComparisonView = false
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -41,9 +42,15 @@ struct SavedMakeListView: View {
                         }
                         Spacer()
                         ZStack(alignment: .topTrailing) {
+                            
                             if isComparisonMode {
+                                NavigationLink(destination: CompareMakeupView(/*records: cards.filter { selectedCardIDs.contains($0.id) }*/), isActive: $showComparisonView) {
+                                    EmptyView()
+                                }
+                                .hidden()
+                                
                                 Button(action: {
-                                    // 決定ボタンのアクションをここに記述
+                                    showComparisonView = true
                                 }) {
                                     Text("決定")
                                         .font(.system(size: 25))
