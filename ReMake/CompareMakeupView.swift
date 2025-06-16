@@ -56,78 +56,168 @@ struct CompareMakeupView: View {
                         if binding.wrappedValue == 0 {
                             // Face overlays
                             if let lip = record.selectedItems["lip"] {
-                                Text(lip)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(x: 0, y: 70)
+                                let values = lip.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("リップ")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                    }
+                                }
+                                .offset(x: 0, y: 70)
                             }
                             if let highlight = record.selectedItems["highlight"] {
-                                Text(highlight)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(x: 60, y: -50)
+                                let values = highlight.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("ハイライト")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                    }
+                                }
+                                .offset(x: 60, y: -50)
                             }
                             if let eyebrow = record.selectedItems["eyebrow"] {
-                                Text(eyebrow)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(x: 0, y: -80)
+                                let values = eyebrow.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("アイブロウ")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                    }
+                                }
+                                .offset(x: 0, y: -80)
                             }
                             if let base = record.selectedItems["base"] {
-                                Text(base)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(x: -60, y: 50)
+                                let values = base.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("ベース")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                    }
+                                }
+                                .offset(x: -60, y: 50)
                             }
                             if let cheek = record.selectedItems["cheek"] {
-                                Text(cheek)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(x: 60, y: 50)
+                                let values = cheek.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("チーク")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                    }
+                                }
+                                .offset(x: 60, y: 50)
                             }
                         } else if binding.wrappedValue == 1 {
                             // Eye overlays
                             if let eyeshadow = record.selectedItems["eyeshadow"] {
-                                Text(eyeshadow)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(x: 0, y: -70)
+                                let values = eyeshadow.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("アイシャドウ")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                    }
+                                }
+                                .offset(x: 0, y: -70)
                             }
                             if let mascara = record.selectedItems["mascara"] {
-                                Text(mascara)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(x: -70, y: 0)
+                                let values = mascara.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("マスカラ")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                    }
+                                }
+                                .offset(x: -70, y: 0)
                             }
                             if let colorlense = record.selectedItems["colorlense"] {
-                                Text(colorlense)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(x: 0, y: 70)
+                                let values = colorlense.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("カラーレンズ")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                    }
+                                }
+                                .offset(x: 0, y: 70)
                             }
                             if let eyeliner = record.selectedItems["eyeliner"] {
-                                Text(eyeliner)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(x: 70, y: 0)
+                                let values = eyeliner.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("アイライナー")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                    }
+                                }
+                                .offset(x: 70, y: 0)
                             }
                         }
                     }
