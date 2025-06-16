@@ -79,9 +79,25 @@ struct InputMakeupView: View {
     @Query private var cosmetics: [Cosmetic]
 
 var pickerOptions: [String] {
-    let options = Array(Set(cosmetics.map { $0.listProduct }))
-    //なにもコスメが登録されていない場合の処理
-    return options.isEmpty ? ["（登録されたコスメがありません）"] : options
+    guard let current = currentSelection else { return [] }
+
+    let categoryTitle: String = {
+        switch current {
+        case .eye: return "アイ"
+        case .lip: return "リップ"
+        case .highlight: return "ハイライト・シェーディング"
+        case .eyebrow: return "アイブロウ"
+        case .base: return "化粧下地" // assuming "base" is stored under "化粧下地"
+        case .cheek: return "チーク"
+        case .mascara: return "マスカラ"
+        case .eyeshadow: return "アイシャドウ"
+        case .eyeliner: return "アイライナー"
+        case .colorlense: return "カラコン"
+        }
+    }()
+
+    let filtered = cosmetics.filter { $0.category == categoryTitle }.map { $0.listProduct }
+    return filtered.isEmpty ? ["（登録されたコスメがありません）"] : filtered
 }
     
     func bindingForCurrentSelection() -> Binding<String> {

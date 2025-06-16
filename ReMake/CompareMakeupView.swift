@@ -4,8 +4,9 @@
 //
 //  Created by maho hayashi on 2025/06/15.
 //
-
+import Foundation
 import SwiftUI
+import SwiftData
 
 struct CompareMakeupView: View {
     @State private var imageIndices: [UUID: Int] = [:]
