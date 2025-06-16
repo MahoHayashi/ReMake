@@ -22,6 +22,14 @@ struct SavedMakeListView: View {
     @State private var compareBeforeWord: String = "比較"
     @State private var showComparisonView = false
     
+//    private func deleteCard(_ card: MakeupRecord) {
+//        if let index = cards.firstIndex(where: { $0.id == card.id }) {
+//            cards.remove(at: index)
+//            modelContext.delete(card)
+//            try? modelContext.save()
+//        }
+//    }
+    
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
@@ -86,7 +94,6 @@ struct SavedMakeListView: View {
                             ForEach(cards, id: \.id) { card in
                                 ZStack(alignment: .topTrailing) {
                                     NavigationLink(destination: MakeupDetailView(record: card)) {
-                                        //MakeupDetailViewに受け取らせたいものを引数に書く
                                         VStack {
                                             if let data = card.faceImageData, let uiImage = UIImage(data: data) {
                                                 Image(uiImage: uiImage)
@@ -104,6 +111,20 @@ struct SavedMakeListView: View {
                                             Text(card.name)
                                                 .bold()
                                                 .foregroundColor(.black)
+//                                            Button(action: {
+//                                                if let index = cards.firstIndex(where: { $0.id == card.id }) {
+//                                                    cards.remove(at: index)
+//                                                    modelContext.delete(card)
+//                                                    try? modelContext.save()
+//                                                }
+//                                            }) {
+//                                                Text("×")
+//                                                    .font(.caption)
+//                                                    .foregroundColor(.red)
+//                                                    .padding(6)
+//                                                    .background(Color.gray.opacity(0.1))
+//                                                    .cornerRadius(8)
+//                                            }
                                         }
                                         .frame(width: 130, height: 200)
                                         .padding()
@@ -112,7 +133,20 @@ struct SavedMakeListView: View {
                                         .clipped()
                                         .shadow(color: .gray.opacity(0.7), radius: 5)
                                     }
-                                    //比較モードがtrueのとき
+//                                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+//                                        if !isComparisonMode {
+//                                            Button(role: .destructive) {
+//                                                if let index = cards.firstIndex(where: { $0.id == card.id }) {
+//                                                    cards.remove(at: index)
+//                                                    modelContext.delete(card)
+//                                                    try? modelContext.save()
+//                                                }
+//                                            } label: {
+//                                                Label("削除", systemImage: "trash")
+//                                            }
+//                                        }
+//                                    }
+
                                     if isComparisonMode {
                                         Button {
                                             if selectedCardIDs.contains(card.id) {

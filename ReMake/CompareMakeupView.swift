@@ -35,7 +35,7 @@ struct CompareMakeupView: View {
                         VStack {
                             ImagePager(images: [
                                 .named("MakeupFace"),
-                                .named("EyeImage"),
+                                .named("ImageEye"),
                                 .uiImage(record.faceImageData != nil ? UIImage(data: record.faceImageData!) ?? UIImage() : UIImage()),
                                 .uiImage(record.eyeImageData != nil ? UIImage(data: record.eyeImageData!) ?? UIImage() : UIImage())
                             ], index: binding)
@@ -187,7 +187,7 @@ struct CompareMakeupView: View {
                             if let colorlense = record.selectedItems["colorlense"] {
                                 let values = colorlense.components(separatedBy: ", ")
                                 VStack(spacing: 2) {
-                                    Text("カラーレンズ")
+                                    Text("カラコン")
                                         .font(.caption)
                                         .bold()
                                         .foregroundColor(.black)

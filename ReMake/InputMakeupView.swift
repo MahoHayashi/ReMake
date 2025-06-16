@@ -154,14 +154,14 @@ var pickerOptions: [String] {
                             .background(.pink)
                             .cornerRadius(20)
                     }
-                    .padding(.trailing, 40)
+                    .padding(.trailing, 20)
                 }
                     //イニシャライザに渡す
                     ZStack {
                         VStack{
                             ImagePager(images: [
                                 .named("MakeupFace"),
-                                .named("EyeImage"),
+                                .named("ImageEye"),
                                 .named("pinkPaper"),
                                 .named("morepinkPaper")
                             ], index: $imageIndex)
@@ -238,7 +238,7 @@ var pickerOptions: [String] {
                                         .foregroundColor(.secondary)
                                 }
                             }
-                            .position(x: 204, y: 205) //ハイライト・シェーディング
+                            .position(x: 200, y: 208) //ハイライト・シェーディング
 
                             VStack(spacing: 0) {
                                 if let values = selectedItemLists[.eyebrow] {
@@ -274,39 +274,49 @@ var pickerOptions: [String] {
                                     Text(sheetTitle)
                                         .font(.headline)
                                         .padding()
-                                    Picker("選択", selection: bindingForCurrentSelection()) {
-                                        ForEach(pickerOptions, id: \.self) { option in
-                                            Text(option)
+
+                                    if pickerOptions.first != "（登録されたコスメがありません）" {
+                                        Picker("選択", selection: bindingForCurrentSelection()) {
+                                            ForEach(pickerOptions, id: \.self) { option in
+                                                Text(option)
+                                            }
                                         }
-                                    }
-                                    .pickerStyle(.wheel)
-                                    .padding()
-                                    HStack {
-                                        
-                                        Button("キャンセル") {
-                                            showPickerSheet = false
-                                        }
-                                        .padding(.leading, 16)
-                                        Spacer()
-                                        Button("完了") {
-                                            if let selection = currentSelection {
-                                                let newValue = bindingForCurrentSelection().wrappedValue
-                                                if !newValue.isEmpty {
-                                                    if var list = selectedItemLists[selection] {
-                                                        if !list.contains(newValue) {
-                                                            list.append(newValue)
-                                                            selectedItemLists[selection] = list
+                                        .pickerStyle(.wheel)
+                                        .padding()
+
+                                        HStack {
+                                            Button("キャンセル") {
+                                                showPickerSheet = false
+                                            }
+                                            .padding(.leading, 16)
+                                            Spacer()
+                                            Button("完了") {
+                                                if let selection = currentSelection {
+                                                    let newValue = bindingForCurrentSelection().wrappedValue
+                                                    if !newValue.isEmpty {
+                                                        if var list = selectedItemLists[selection] {
+                                                            if !list.contains(newValue) {
+                                                                list.append(newValue)
+                                                                selectedItemLists[selection] = list
+                                                            }
+                                                        } else {
+                                                            selectedItemLists[selection] = [newValue]
                                                         }
-                                                    } else {
-                                                        selectedItemLists[selection] = [newValue]
                                                     }
                                                 }
+                                                showPickerSheet = false
                                             }
+                                        }
+                                        .padding(.leading, 16)
+                                        .padding(.trailing, 40)
+                                    } else {
+                                        Text("登録されたコスメがありません")
+                                            .foregroundColor(.gray)
+                                            .padding()
+                                        Button("閉じる") {
                                             showPickerSheet = false
                                         }
                                     }
-                                    .padding(.leading, 16)
-                                    .padding(.trailing, 40)
                                 }
                                 .presentationDetents([
                                     .medium,
@@ -401,49 +411,59 @@ var pickerOptions: [String] {
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
-                                            .frame(width: 40, height: 40)
-                                            .foregroundColor(.pink)
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(.secondary)
                                     }
                                 }
-                                .position(x: 150, y: 90)
+                                .position(x: 140, y: 110)
                                 .sheet(isPresented: $showPickerSheet) {
                                     VStack {
                                         Text(sheetTitle)
                                             .font(.headline)
                                             .padding()
-                                        Picker("選択", selection: bindingForCurrentSelection()) {
-                                            ForEach(pickerOptions, id: \.self) { option in
-                                                Text(option)
+
+                                        if pickerOptions.first != "（登録されたコスメがありません）" {
+                                            Picker("選択", selection: bindingForCurrentSelection()) {
+                                                ForEach(pickerOptions, id: \.self) { option in
+                                                    Text(option)
+                                                }
                                             }
-                                        }
-                                        .pickerStyle(.wheel)
-                                        .padding()
-                                        HStack {
-                                            
-                                            Button("キャンセル") {
-                                                showPickerSheet = false
-                                            }
-                                            .padding(.leading, 16)
-                                            Spacer()
-                                            Button("完了") {
-                                                if let selection = currentSelection {
-                                                    let newValue = bindingForCurrentSelection().wrappedValue
-                                                    if !newValue.isEmpty {
-                                                        if var list = selectedItemLists[selection] {
-                                                            if !list.contains(newValue) {
-                                                                list.append(newValue)
-                                                                selectedItemLists[selection] = list
+                                            .pickerStyle(.wheel)
+                                            .padding()
+
+                                            HStack {
+                                                Button("キャンセル") {
+                                                    showPickerSheet = false
+                                                }
+                                                .padding(.leading, 16)
+                                                Spacer()
+                                                Button("完了") {
+                                                    if let selection = currentSelection {
+                                                        let newValue = bindingForCurrentSelection().wrappedValue
+                                                        if !newValue.isEmpty {
+                                                            if var list = selectedItemLists[selection] {
+                                                                if !list.contains(newValue) {
+                                                                    list.append(newValue)
+                                                                    selectedItemLists[selection] = list
+                                                                }
+                                                            } else {
+                                                                selectedItemLists[selection] = [newValue]
                                                             }
-                                                        } else {
-                                                            selectedItemLists[selection] = [newValue]
                                                         }
                                                     }
+                                                    showPickerSheet = false
                                                 }
+                                            }
+                                            .padding(.leading, 16)
+                                            .padding(.trailing, 40)
+                                        } else {
+                                            Text("登録されたコスメがありません")
+                                                .foregroundColor(.gray)
+                                                .padding()
+                                            Button("閉じる") {
                                                 showPickerSheet = false
                                             }
                                         }
-                                        .padding(.leading, 16)
-                                        .padding(.trailing, 40)
                                     }
                                     .presentationDetents([
                                         .medium,
@@ -477,11 +497,11 @@ var pickerOptions: [String] {
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
-                                            .frame(width: 40, height: 40)
-                                            .foregroundColor(.pink)
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(.secondary)
                                     }
                                 }
-                                .position(x: 273, y: 90) // マスカラ
+                                .position(x: 270, y: 100) // マスカラ
 
                                 VStack(spacing: 0) {
                                     if let values = selectedItemLists[.colorlense] {
@@ -507,11 +527,11 @@ var pickerOptions: [String] {
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
-                                            .frame(width: 40, height: 40)
-                                            .foregroundColor(.pink)
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(.secondary)
                                     }
                                 }
-                                .position(x: 196, y: 190) // カラコン
+                                .position(x: 180, y: 205) // カラコン
 
                                 VStack(spacing: 0) {
                                     if let values = selectedItemLists[.eyeliner] {
@@ -537,11 +557,11 @@ var pickerOptions: [String] {
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
-                                            .frame(width: 40, height: 40)
-                                            .foregroundColor(.pink)
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(.secondary)
                                     }
                                 }
-                                .position(x: 340, y: 170) // アイライン
+                                .position(x: 328, y: 170) // アイライン
                                 // 目
                             }
                         }else if imageIndex == 2 {

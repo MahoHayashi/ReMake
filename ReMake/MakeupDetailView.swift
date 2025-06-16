@@ -69,7 +69,7 @@ struct  MakeupDetailView: View {
                     VStack{
                         ImagePager(images: [
                             .named("MakeupFace"),
-                            .named("EyeImage"),
+                            .named("ImageEye"),
                             .uiImage(record.faceImageData != nil ? UIImage(data: record.faceImageData!) ?? UIImage() : UIImage()),
                             .uiImage(record.eyeImageData != nil ? UIImage(data: record.eyeImageData!) ?? UIImage() : UIImage())
                         ], index: $imageIndex)
