@@ -65,6 +65,7 @@ struct InputMakeupView: View {
     @State private var currentSelection: SelectionType? = nil
     @State private var sheetTitle: String = ""
     @State private var selectedItems: [SelectionType: String] = [:]
+    @State private var selectedItemLists: [SelectionType: [String]] = [:]
 
     @StateObject private var viewModel = CameraLaunchViewModel()
 
@@ -78,9 +79,25 @@ struct InputMakeupView: View {
     @Query private var cosmetics: [Cosmetic]
 
 var pickerOptions: [String] {
-    let options = Array(Set(cosmetics.map { $0.listProduct }))
-    //なにもコスメが登録されていない場合の処理
-    return options.isEmpty ? ["（登録されたコスメがありません）"] : options
+    guard let current = currentSelection else { return [] }
+
+    let categoryTitle: String = {
+        switch current {
+        case .eye: return "アイ"
+        case .lip: return "リップ"
+        case .highlight: return "ハイライト・シェーディング"
+        case .eyebrow: return "アイブロウ"
+        case .base: return "化粧下地" // assuming "base" is stored under "化粧下地"
+        case .cheek: return "チーク"
+        case .mascara: return "マスカラ"
+        case .eyeshadow: return "アイシャドウ"
+        case .eyeliner: return "アイライナー"
+        case .colorlense: return "カラコン"
+        }
+    }()
+
+    let filtered = cosmetics.filter { $0.category == categoryTitle }.map { $0.listProduct }
+    return filtered.isEmpty ? ["（登録されたコスメがありません）"] : filtered
 }
     
     func bindingForCurrentSelection() -> Binding<String> {
@@ -114,8 +131,10 @@ var pickerOptions: [String] {
                             faceImageData: tempFaceImageData,
                             eyeImageData: tempEyeImageData
                         )
-                        // Convert [SelectionType: String] to [String: String]
-                        record.selectedItems = Dictionary(uniqueKeysWithValues: selectedItems.map { (key, value) in (String(describing: key), value) })
+                        // Save as: [String: String] with joined values
+                        record.selectedItems = selectedItemLists.reduce(into: [:]) { result, pair in
+                            result[String(describing: pair.key)] = pair.value.joined(separator: ", ")
+                        }
                         modelContext.insert(record)
                         do {
                             try modelContext.save()
@@ -135,13 +154,14 @@ var pickerOptions: [String] {
                             .background(.pink)
                             .cornerRadius(20)
                     }
+                    .padding(.trailing, 20)
                 }
                     //イニシャライザに渡す
                     ZStack {
                         VStack{
                             ImagePager(images: [
                                 .named("MakeupFace"),
-                                .named("EyeImage"),
+                                .named("ImageEye"),
                                 .named("pinkPaper"),
                                 .named("morepinkPaper")
                             ], index: $imageIndex)
@@ -161,14 +181,21 @@ var pickerOptions: [String] {
                             // Add six plus buttons over the image with selected value display
                             // Example for .lip
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.lip], !value.isEmpty {
-                                    Text(value)
+                                if let values = selectedItemLists[.lip] {
+                                    Text(sectionTitle(for: .lip))
                                         .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .padding(4)
-                                        .background(Color.white.opacity(0.6))
-                                        .cornerRadius(6)
+                                        .bold()
+                                        .foregroundColor(.black)
                                         .offset(y: -20)
+                                    ForEach(values, id: \.self) { value in
+                                        Text(value)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                            .offset(y: -20)
+                                    }
                                 }
                                 Button(action: {
                                     sheetTitle = "リップを選択"
@@ -184,14 +211,21 @@ var pickerOptions: [String] {
                             .position(x: 218, y: 285) //リップ
 
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.highlight], !value.isEmpty {
-                                    Text(value)
+                                if let values = selectedItemLists[.highlight] {
+                                    Text(sectionTitle(for: .highlight))
                                         .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .padding(4)
-                                        .background(Color.white.opacity(0.6))
-                                        .cornerRadius(6)
+                                        .bold()
+                                        .foregroundColor(.black)
                                         .offset(y: -20)
+                                    ForEach(values, id: \.self) { value in
+                                        Text(value)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                            .offset(y: -20)
+                                    }
                                 }
                                 Button(action: {
                                     sheetTitle = "ハイライト・シェーディングを選択"
@@ -204,17 +238,24 @@ var pickerOptions: [String] {
                                         .foregroundColor(.secondary)
                                 }
                             }
-                            .position(x: 204, y: 205) //ハイライト・シェーディング
+                            .position(x: 200, y: 208) //ハイライト・シェーディング
 
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.eyebrow], !value.isEmpty {
-                                    Text(value)
+                                if let values = selectedItemLists[.eyebrow] {
+                                    Text(sectionTitle(for: .eyebrow))
                                         .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .padding(4)
-                                        .background(Color.white.opacity(0.6))
-                                        .cornerRadius(6)
+                                        .bold()
+                                        .foregroundColor(.black)
                                         .offset(y: -20)
+                                    ForEach(values, id: \.self) { value in
+                                        Text(value)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                            .offset(y: -20)
+                                    }
                                 }
                                 Button(action: {
                                     sheetTitle = "アイブロウを選択"
@@ -233,29 +274,49 @@ var pickerOptions: [String] {
                                     Text(sheetTitle)
                                         .font(.headline)
                                         .padding()
-                                    Picker("選択", selection: bindingForCurrentSelection()) {
-                                        ForEach(pickerOptions, id: \.self) { option in
-                                            Text(option)
+
+                                    if pickerOptions.first != "（登録されたコスメがありません）" {
+                                        Picker("選択", selection: bindingForCurrentSelection()) {
+                                            ForEach(pickerOptions, id: \.self) { option in
+                                                Text(option)
+                                            }
                                         }
-                                    }
-                                    .pickerStyle(.wheel)
-                                    .padding()
-                                    HStack {
-                                        
-                                        Button("キャンセル") {
-                                            showPickerSheet = false
+                                        .pickerStyle(.wheel)
+                                        .padding()
+
+                                        HStack {
+                                            Button("キャンセル") {
+                                                showPickerSheet = false
+                                            }
+                                            .padding(.leading, 16)
+                                            Spacer()
+                                            Button("完了") {
+                                                if let selection = currentSelection {
+                                                    let newValue = bindingForCurrentSelection().wrappedValue
+                                                    if !newValue.isEmpty {
+                                                        if var list = selectedItemLists[selection] {
+                                                            if !list.contains(newValue) {
+                                                                list.append(newValue)
+                                                                selectedItemLists[selection] = list
+                                                            }
+                                                        } else {
+                                                            selectedItemLists[selection] = [newValue]
+                                                        }
+                                                    }
+                                                }
+                                                showPickerSheet = false
+                                            }
                                         }
                                         .padding(.leading, 16)
-                                        Spacer()
-                                        Button("完了") {
-                                            if let selection = currentSelection {
-                                                selectedItems[selection] = bindingForCurrentSelection().wrappedValue
-                                            }
+                                        .padding(.trailing, 40)
+                                    } else {
+                                        Text("登録されたコスメがありません")
+                                            .foregroundColor(.gray)
+                                            .padding()
+                                        Button("閉じる") {
                                             showPickerSheet = false
                                         }
                                     }
-                                    .padding(.leading, 16)
-                                    .padding(.trailing, 40)
                                 }
                                 .presentationDetents([
                                     .medium,
@@ -266,14 +327,21 @@ var pickerOptions: [String] {
                             }
 
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.base], !value.isEmpty {
-                                    Text(value)
+                                if let values = selectedItemLists[.base] {
+                                    Text(sectionTitle(for: .base))
                                         .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .padding(4)
-                                        .background(Color.white.opacity(0.6))
-                                        .cornerRadius(6)
+                                        .bold()
+                                        .foregroundColor(.black)
                                         .offset(y: -20)
+                                    ForEach(values, id: \.self) { value in
+                                        Text(value)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                            .offset(y: -20)
+                                    }
                                 }
                                 Button(action: {
                                     sheetTitle = "ベースメイクを選択"
@@ -289,14 +357,21 @@ var pickerOptions: [String] {
                             .position(x: 135, y: 247) //ベースメイク
 
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.cheek], !value.isEmpty {
-                                    Text(value)
+                                if let values = selectedItemLists[.cheek] {
+                                    Text(sectionTitle(for: .cheek))
                                         .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .padding(4)
-                                        .background(Color.white.opacity(0.6))
-                                        .cornerRadius(6)
+                                        .bold()
+                                        .foregroundColor(.black)
                                         .offset(y: -20)
+                                    ForEach(values, id: \.self) { value in
+                                        Text(value)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                            .offset(y: -20)
+                                    }
                                 }
                                 Button(action: {
                                     sheetTitle = "チークを選択"
@@ -313,14 +388,21 @@ var pickerOptions: [String] {
                         }else if imageIndex == 1 {
                             ZStack {
                                 VStack(spacing: 0) {
-                                    if let value = selectedItems[.eyeshadow], !value.isEmpty {
-                                        Text(value)
+                                    if let values = selectedItemLists[.eyeshadow] {
+                                        Text(sectionTitle(for: .eyeshadow))
                                             .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
+                                            .bold()
+                                            .foregroundColor(.black)
                                             .offset(y: -30)
+                                        ForEach(values, id: \.self) { value in
+                                            Text(value)
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                                .padding(4)
+                                                .background(Color.white.opacity(0.6))
+                                                .cornerRadius(6)
+                                                .offset(y: -30)
+                                        }
                                     }
                                     Button(action: {
                                         currentSelection = .eyeshadow
@@ -329,39 +411,59 @@ var pickerOptions: [String] {
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
-                                            .frame(width: 40, height: 40)
-                                            .foregroundColor(.pink)
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(.secondary)
                                     }
                                 }
-                                .position(x: 150, y: 90)
+                                .position(x: 140, y: 110)
                                 .sheet(isPresented: $showPickerSheet) {
                                     VStack {
                                         Text(sheetTitle)
                                             .font(.headline)
                                             .padding()
-                                        Picker("選択", selection: bindingForCurrentSelection()) {
-                                            ForEach(pickerOptions, id: \.self) { option in
-                                                Text(option)
+
+                                        if pickerOptions.first != "（登録されたコスメがありません）" {
+                                            Picker("選択", selection: bindingForCurrentSelection()) {
+                                                ForEach(pickerOptions, id: \.self) { option in
+                                                    Text(option)
+                                                }
                                             }
-                                        }
-                                        .pickerStyle(.wheel)
-                                        .padding()
-                                        HStack {
-                                            
-                                            Button("キャンセル") {
-                                                showPickerSheet = false
+                                            .pickerStyle(.wheel)
+                                            .padding()
+
+                                            HStack {
+                                                Button("キャンセル") {
+                                                    showPickerSheet = false
+                                                }
+                                                .padding(.leading, 16)
+                                                Spacer()
+                                                Button("完了") {
+                                                    if let selection = currentSelection {
+                                                        let newValue = bindingForCurrentSelection().wrappedValue
+                                                        if !newValue.isEmpty {
+                                                            if var list = selectedItemLists[selection] {
+                                                                if !list.contains(newValue) {
+                                                                    list.append(newValue)
+                                                                    selectedItemLists[selection] = list
+                                                                }
+                                                            } else {
+                                                                selectedItemLists[selection] = [newValue]
+                                                            }
+                                                        }
+                                                    }
+                                                    showPickerSheet = false
+                                                }
                                             }
                                             .padding(.leading, 16)
-                                            Spacer()
-                                            Button("完了") {
-                                                if let selection = currentSelection {
-                                                    selectedItems[selection] = bindingForCurrentSelection().wrappedValue
-                                                }
+                                            .padding(.trailing, 40)
+                                        } else {
+                                            Text("登録されたコスメがありません")
+                                                .foregroundColor(.gray)
+                                                .padding()
+                                            Button("閉じる") {
                                                 showPickerSheet = false
                                             }
                                         }
-                                        .padding(.leading, 16)
-                                        .padding(.trailing, 40)
                                     }
                                     .presentationDetents([
                                         .medium,
@@ -372,14 +474,21 @@ var pickerOptions: [String] {
                                 }//アイシャドウ
 
                                 VStack(spacing: 0) {
-                                    if let value = selectedItems[.mascara], !value.isEmpty {
-                                        Text(value)
+                                    if let values = selectedItemLists[.mascara] {
+                                        Text(sectionTitle(for: .mascara))
                                             .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
+                                            .bold()
+                                            .foregroundColor(.black)
                                             .offset(y: -30)
+                                        ForEach(values, id: \.self) { value in
+                                            Text(value)
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                                .padding(4)
+                                                .background(Color.white.opacity(0.6))
+                                                .cornerRadius(6)
+                                                .offset(y: -30)
+                                        }
                                     }
                                     Button(action: {
                                         currentSelection = .mascara
@@ -388,21 +497,28 @@ var pickerOptions: [String] {
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
-                                            .frame(width: 40, height: 40)
-                                            .foregroundColor(.pink)
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(.secondary)
                                     }
                                 }
-                                .position(x: 273, y: 90) // マスカラ
+                                .position(x: 270, y: 100) // マスカラ
 
                                 VStack(spacing: 0) {
-                                    if let value = selectedItems[.colorlense], !value.isEmpty {
-                                        Text(value)
+                                    if let values = selectedItemLists[.colorlense] {
+                                        Text(sectionTitle(for: .colorlense))
                                             .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
+                                            .bold()
+                                            .foregroundColor(.black)
                                             .offset(y: -30)
+                                        ForEach(values, id: \.self) { value in
+                                            Text(value)
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                                .padding(4)
+                                                .background(Color.white.opacity(0.6))
+                                                .cornerRadius(6)
+                                                .offset(y: -30)
+                                        }
                                     }
                                     Button(action: {
                                         currentSelection = .colorlense
@@ -411,21 +527,28 @@ var pickerOptions: [String] {
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
-                                            .frame(width: 40, height: 40)
-                                            .foregroundColor(.pink)
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(.secondary)
                                     }
                                 }
-                                .position(x: 196, y: 190) // カラコン
+                                .position(x: 180, y: 205) // カラコン
 
                                 VStack(spacing: 0) {
-                                    if let value = selectedItems[.eyeliner], !value.isEmpty {
-                                        Text(value)
+                                    if let values = selectedItemLists[.eyeliner] {
+                                        Text(sectionTitle(for: .eyeliner))
                                             .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
+                                            .bold()
+                                            .foregroundColor(.black)
                                             .offset(y: -30)
+                                        ForEach(values, id: \.self) { value in
+                                            Text(value)
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                                .padding(4)
+                                                .background(Color.white.opacity(0.6))
+                                                .cornerRadius(6)
+                                                .offset(y: -30)
+                                        }
                                     }
                                     Button(action: {
                                         currentSelection = .eyeliner
@@ -434,11 +557,12 @@ var pickerOptions: [String] {
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
-                                            .frame(width: 40, height: 40)
-                                            .foregroundColor(.pink)
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(.secondary)
                                     }
                                 }
-                                .position(x: 340, y: 170) // アイライン
+                                .position(x: 328, y: 170) // アイライン
+                                // 目
                             }
                         }else if imageIndex == 2 {
                             // tempFaceImageData の画像表示
@@ -563,4 +687,21 @@ var pickerOptions: [String] {
 
 #Preview {
     InputMakeupView(path: .constant(NavigationPath()))
+}
+
+extension InputMakeupView {
+    func sectionTitle(for selection: SelectionType) -> String {
+        switch selection {
+        case .eye: return "アイ"
+        case .lip: return "リップ"
+        case .highlight: return "ハイライト・シェーディング"
+        case .eyebrow: return "アイブロウ"
+        case .base: return "ベースメイク"
+        case .cheek: return "チーク"
+        case .mascara: return "マスカラ"
+        case .eyeshadow: return "アイシャドウ"
+        case .eyeliner: return "アイライン"
+        case .colorlense: return "カラコン"
+        }
+    }
 }
