@@ -88,111 +88,201 @@ struct  MakeupDetailView: View {
                     if imageIndex == 0 {
                         VStack(spacing: 0) {
                             if let value = selectedItems[.lip], !value.isEmpty {
-                                Text(value)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .padding(4)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(y: -20)
+                                let values = value.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("リップ")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                        .offset(y: -20)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                            .offset(y: -20)
+                                    }
+                                }
                             }
                         }
                         .position(x: 218, y: 285)
                         VStack(spacing: 0) {
                             if let value = selectedItems[.highlight], !value.isEmpty {
-                                Text(value)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .padding(4)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(y: -20)
+                                let values = value.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("ハイライト")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                        .offset(y: -20)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                            .offset(y: -20)
+                                    }
+                                }
                             }
                         }
                         .position(x: 204, y: 205)
                         VStack(spacing: 0) {
                             if let value = selectedItems[.eyebrow], !value.isEmpty {
-                                Text(value)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .padding(4)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(y: -20)
+                                let values = value.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("アイブロウ")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                        .offset(y: -20)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                            .offset(y: -20)
+                                    }
+                                }
                             }
                         }
                         .position(x: 278, y: 152)
                         VStack(spacing: 0) {
                             if let value = selectedItems[.base], !value.isEmpty {
-                                Text(value)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .padding(4)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(y: -20)
+                                let values = value.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("ベース")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                        .offset(y: -20)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                            .offset(y: -20)
+                                    }
+                                }
                             }
                         }
                         .position(x: 135, y: 247)
                         VStack(spacing: 0) {
                             if let value = selectedItems[.cheek], !value.isEmpty {
-                                Text(value)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .padding(4)
-                                    .background(Color.white.opacity(0.6))
-                                    .cornerRadius(6)
-                                    .offset(y: -20)
+                                let values = value.components(separatedBy: ", ")
+                                VStack(spacing: 2) {
+                                    Text("チーク")
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                        .offset(y: -20)
+                                    ForEach(values, id: \.self) { val in
+                                        Text(val)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                            .padding(4)
+                                            .background(Color.white.opacity(0.6))
+                                            .cornerRadius(6)
+                                            .offset(y: -20)
+                                    }
+                                }
                             }
                         }
                         .position(x: 270, y: 230)
-                    }else if imageIndex == 1 {
+                    } else if imageIndex == 1 {
                         ZStack {
                             VStack(spacing: 0) {
                                 if let value = selectedItems[.eyeshadow], !value.isEmpty {
-                                    Text(value)
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .padding(4)
-                                        .background(Color.white.opacity(0.6))
-                                        .cornerRadius(6)
-                                        .offset(y: -30)
+                                    let values = value.components(separatedBy: ", ")
+                                    VStack(spacing: 2) {
+                                        Text("アイシャドウ")
+                                            .font(.caption)
+                                            .bold()
+                                            .foregroundColor(.black)
+                                            .offset(y: -30)
+                                        ForEach(values, id: \.self) { val in
+                                            Text(val)
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                                .padding(4)
+                                                .background(Color.white.opacity(0.6))
+                                                .cornerRadius(6)
+                                                .offset(y: -30)
+                                        }
+                                    }
                                 }
                             }
                             .position(x: 150, y: 90)
                             VStack(spacing: 0) {
                                 if let value = selectedItems[.mascara], !value.isEmpty {
-                                    Text(value)
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .padding(4)
-                                        .background(Color.white.opacity(0.6))
-                                        .cornerRadius(6)
-                                        .offset(y: -30)
+                                    let values = value.components(separatedBy: ", ")
+                                    VStack(spacing: 2) {
+                                        Text("マスカラ")
+                                            .font(.caption)
+                                            .bold()
+                                            .foregroundColor(.black)
+                                            .offset(y: -30)
+                                        ForEach(values, id: \.self) { val in
+                                            Text(val)
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                                .padding(4)
+                                                .background(Color.white.opacity(0.6))
+                                                .cornerRadius(6)
+                                                .offset(y: -30)
+                                        }
+                                    }
                                 }
                             }
                             .position(x: 273, y: 90)
                             VStack(spacing: 0) {
                                 if let value = selectedItems[.colorlense], !value.isEmpty {
-                                    Text(value)
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .padding(4)
-                                        .background(Color.white.opacity(0.6))
-                                        .cornerRadius(6)
-                                        .offset(y: -30)
+                                    let values = value.components(separatedBy: ", ")
+                                    VStack(spacing: 2) {
+                                        Text("カラコン")
+                                            .font(.caption)
+                                            .bold()
+                                            .foregroundColor(.black)
+                                            .offset(y: -30)
+                                        ForEach(values, id: \.self) { val in
+                                            Text(val)
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                                .padding(4)
+                                                .background(Color.white.opacity(0.6))
+                                                .cornerRadius(6)
+                                                .offset(y: -30)
+                                        }
+                                    }
                                 }
                             }
                             .position(x: 196, y: 190)
                             VStack(spacing: 0) {
                                 if let value = selectedItems[.eyeliner], !value.isEmpty {
-                                    Text(value)
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .padding(4)
-                                        .background(Color.white.opacity(0.6))
-                                        .cornerRadius(6)
-                                        .offset(y: -30)
+                                    let values = value.components(separatedBy: ", ")
+                                    VStack(spacing: 2) {
+                                        Text("アイライナー")
+                                            .font(.caption)
+                                            .bold()
+                                            .foregroundColor(.black)
+                                            .offset(y: -30)
+                                        ForEach(values, id: \.self) { val in
+                                            Text(val)
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                                .padding(4)
+                                                .background(Color.white.opacity(0.6))
+                                                .cornerRadius(6)
+                                                .offset(y: -30)
+                                        }
+                                    }
                                 }
                             }
                             .position(x: 340, y: 170)

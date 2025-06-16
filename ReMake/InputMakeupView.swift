@@ -138,6 +138,7 @@ var pickerOptions: [String] {
                             .background(.pink)
                             .cornerRadius(20)
                     }
+                    .padding(.trailing, 40)
                 }
                     //イニシャライザに渡す
                     ZStack {
@@ -526,35 +527,6 @@ var pickerOptions: [String] {
                                 }
                                 .position(x: 340, y: 170) // アイライン
                                 // 目
-                                VStack(spacing: 0) {
-                                    if let values = selectedItemLists[.eye] {
-                                        Text(sectionTitle(for: .eye))
-                                            .font(.caption)
-                                            .bold()
-                                            .foregroundColor(.black)
-                                            .offset(y: -30)
-                                        ForEach(values, id: \.self) { value in
-                                            Text(value)
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                                .padding(4)
-                                                .background(Color.white.opacity(0.6))
-                                                .cornerRadius(6)
-                                                .offset(y: -30)
-                                        }
-                                    }
-                                    Button(action: {
-                                        currentSelection = .eye
-                                        sheetTitle = "目を選択"
-                                        showPickerSheet = true
-                                    }) {
-                                        Image(systemName: "plus.circle")
-                                            .resizable()
-                                            .frame(width: 40, height: 40)
-                                            .foregroundColor(.pink)
-                                    }
-                                }
-                                .position(x: 50, y: 100) // Example position for eye (adjust as needed)
                             }
                         }else if imageIndex == 2 {
                             // tempFaceImageData の画像表示
