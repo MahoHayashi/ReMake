@@ -129,7 +129,7 @@ struct  MakeupDetailView: View {
                                 }
                             }
                         }
-                        .position(x: 204, y: 205)
+                        .position(x: 200, y: 208)
                         VStack(spacing: 0) {
                             if let value = selectedItems[.eyebrow], !value.isEmpty {
                                 let values = value.components(separatedBy: ", ")
@@ -241,7 +241,7 @@ struct  MakeupDetailView: View {
                                     }
                                 }
                             }
-                            .position(x: 273, y: 90)
+                            .position(x: 270, y: 100)
                             VStack(spacing: 0) {
                                 if let value = selectedItems[.colorlense], !value.isEmpty {
                                     let values = value.components(separatedBy: ", ")
@@ -263,7 +263,7 @@ struct  MakeupDetailView: View {
                                     }
                                 }
                             }
-                            .position(x: 196, y: 190)
+                            .position(x: 180, y: 205)
                             VStack(spacing: 0) {
                                 if let value = selectedItems[.eyeliner], !value.isEmpty {
                                     let values = value.components(separatedBy: ", ")
@@ -285,7 +285,7 @@ struct  MakeupDetailView: View {
                                     }
                                 }
                             }
-                            .position(x: 340, y: 170)
+                            .position(x: 328, y: 170)
                         }
                     }
                 }

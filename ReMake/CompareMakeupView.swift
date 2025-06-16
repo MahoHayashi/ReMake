@@ -72,7 +72,7 @@ struct CompareMakeupView: View {
                                             .cornerRadius(6)
                                     }
                                 }
-                                .offset(x: 0, y: 70)
+                                .offset(x: 0, y: 90)
                             }
                             if let highlight = record.selectedItems["highlight"] {
                                 let values = highlight.components(separatedBy: ", ")
@@ -90,7 +90,7 @@ struct CompareMakeupView: View {
                                             .cornerRadius(6)
                                     }
                                 }
-                                .offset(x: 60, y: -50)
+                                .offset(x: 40, y: -50)
                             }
                             if let eyebrow = record.selectedItems["eyebrow"] {
                                 let values = eyebrow.components(separatedBy: ", ")
@@ -108,7 +108,7 @@ struct CompareMakeupView: View {
                                             .cornerRadius(6)
                                     }
                                 }
-                                .offset(x: 0, y: -80)
+                                .offset(x: 70, y: -80)
                             }
                             if let base = record.selectedItems["base"] {
                                 let values = base.components(separatedBy: ", ")
@@ -126,7 +126,7 @@ struct CompareMakeupView: View {
                                             .cornerRadius(6)
                                     }
                                 }
-                                .offset(x: -60, y: 50)
+                                .offset(x: -70, y: 20)
                             }
                             if let cheek = record.selectedItems["cheek"] {
                                 let values = cheek.components(separatedBy: ", ")
@@ -144,7 +144,7 @@ struct CompareMakeupView: View {
                                             .cornerRadius(6)
                                     }
                                 }
-                                .offset(x: 60, y: 50)
+                                .offset(x: 70, y: 20)
                             }
                         } else if binding.wrappedValue == 1 {
                             // Eye overlays
@@ -218,7 +218,7 @@ struct CompareMakeupView: View {
                                             .cornerRadius(6)
                                     }
                                 }
-                                .offset(x: 70, y: 0)
+                                .offset(x: 90, y: 0)
                             }
                         }
                     }
