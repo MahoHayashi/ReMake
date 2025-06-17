@@ -102,7 +102,7 @@ struct SavedMakeListView: View {
                                                     .cornerRadius(10)
                                                     .frame(width: 170, height: 170)
                                             } else {
-                                                Image("Marichan")
+                                                Image("pinkPaper")
                                                     .resizable()
                                                     .scaledToFit()
                                                     .cornerRadius(10)
