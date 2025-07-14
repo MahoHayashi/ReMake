@@ -80,24 +80,31 @@ struct InputMakeupView: View {
 
 var pickerOptions: [String] {
     guard let current = currentSelection else { return [] }
-
-    let categoryTitle: String = {
-        switch current {
-        case .eye: return "アイ"
-        case .lip: return "リップ"
-        case .highlight: return "ハイライト・シェーディング"
-        case .eyebrow: return "アイブロウ"
-        case .base: return "化粧下地" // assuming "base" is stored under "化粧下地"
-        case .cheek: return "チーク"
-        case .mascara: return "マスカラ"
-        case .eyeshadow: return "アイシャドウ"
-        case .eyeliner: return "アイライナー"
-        case .colorlense: return "カラコン"
-        }
-    }()
-
-    let filtered = cosmetics.filter { $0.category == categoryTitle }.map { $0.listProduct }
-    return filtered.isEmpty ? ["（登録されたコスメがありません）"] : filtered
+    switch current {
+    case .base:
+        let baseCategories = ["化粧下地", "ファンデーション", "コンシーラー"]
+        let filtered = cosmetics
+            .filter { baseCategories.contains($0.category) }
+            .map { $0.listProduct }
+        return filtered.isEmpty ? ["（登録されたコスメがありません）"] : filtered
+    default:
+        let categoryTitle: String = {
+            switch current {
+            case .eye: return "アイ"
+            case .lip: return "リップ"
+            case .highlight: return "ハイライト・シェーディング"
+            case .eyebrow: return "アイブロウ"
+            case .cheek: return "チーク"
+            case .mascara: return "マスカラ"
+            case .eyeshadow: return "アイシャドウ"
+            case .eyeliner: return "アイライナー"
+            case .colorlense: return "カラコン"
+            case .base: return "" // handled above
+            }
+        }()
+        let filtered = cosmetics.filter { $0.category == categoryTitle }.map { $0.listProduct }
+        return filtered.isEmpty ? ["（登録されたコスメがありません）"] : filtered
+    }
 }
     
     func bindingForCurrentSelection() -> Binding<String> {
