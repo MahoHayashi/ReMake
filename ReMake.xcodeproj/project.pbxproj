@@ -35,17 +35,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		17852F6C2FB36A99004DC508 /* Exceptions for "ReMake" folder in "ReMake" target */ = {
+		17852F7A2FB705AB004DC508 /* Exceptions for "ReMakeTests" folder in "ReMake" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				View/ReMakeTests/ReMakeTests.swift,
+				ReMakeTests.swift,
 			);
 			target = 17825AF12DEFEB8F0017DBEB /* ReMake */;
 		};
-		17852F6D2FB36A99004DC508 /* Exceptions for "ReMake" folder in "ReMakeTests" target */ = {
+		17852F7B2FB705AB004DC508 /* Exceptions for "ReMakeTests" folder in "ReMakeTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				View/ReMakeTests/ReMakeTests.swift,
+				ReMakeTests.swift,
 			);
 			target = 17825AFE2DEFEB910017DBEB /* ReMakeTests */;
 		};
@@ -54,10 +54,6 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		17825AF42DEFEB8F0017DBEB /* ReMake */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				17852F6C2FB36A99004DC508 /* Exceptions for "ReMake" folder in "ReMake" target */,
-				17852F6D2FB36A99004DC508 /* Exceptions for "ReMake" folder in "ReMakeTests" target */,
-			);
 			path = ReMake;
 			sourceTree = "<group>";
 		};
@@ -69,6 +65,15 @@
 		17825B772DF349FE0017DBEB /* New Folder */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "New Folder";
+			sourceTree = "<group>";
+		};
+		17852F782FB705AB004DC508 /* ReMakeTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				17852F7A2FB705AB004DC508 /* Exceptions for "ReMakeTests" folder in "ReMake" target */,
+				17852F7B2FB705AB004DC508 /* Exceptions for "ReMakeTests" folder in "ReMakeTests" target */,
+			);
+			path = ReMakeTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -105,6 +110,7 @@
 				17825B772DF349FE0017DBEB /* New Folder */,
 				17825AF42DEFEB8F0017DBEB /* ReMake */,
 				17825B0C2DEFEB910017DBEB /* ReMakeUITests */,
+				17852F782FB705AB004DC508 /* ReMakeTests */,
 				17825B922DF444F80017DBEB /* Frameworks */,
 				17825AF32DEFEB8F0017DBEB /* Products */,
 			);
@@ -146,6 +152,7 @@
 			fileSystemSynchronizedGroups = (
 				17825AF42DEFEB8F0017DBEB /* ReMake */,
 				17825B772DF349FE0017DBEB /* New Folder */,
+				17852F782FB705AB004DC508 /* ReMakeTests */,
 			);
 			name = ReMake;
 			packageProductDependencies = (

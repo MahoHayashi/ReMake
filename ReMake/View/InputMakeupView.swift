@@ -9,11 +9,6 @@ import SwiftUI
 import Foundation
 import _SwiftData_SwiftUI
 
-class CameraLaunchViewModel: ObservableObject {
-    @Published var isLaunchedCamera = false
-    @Published var imageData = Data()
-    @Published var capturedType: String? = nil
-}
 
 struct InputMakeupView: View {
     
