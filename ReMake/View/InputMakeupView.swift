@@ -7,28 +7,7 @@
 
 import SwiftUI
 import Foundation
-import SwiftData
-
-@Model
-class MakeupRecord {
-    var id = UUID()
-    var name: String
-    var comment: String
-    var url: String
-    var faceImageData: Data?
-    var eyeImageData: Data?
-    var selectedItems: [String: String] = [:]
-
-    init(name: String, comment: String, url: String, faceImageData: Data? = nil, eyeImageData: Data? = nil) {
-        self.name = name
-        self.comment = comment
-        self.url = url
-        self.faceImageData = faceImageData
-        self.eyeImageData = eyeImageData
-    }
-}
-
-
+import _SwiftData_SwiftUI
 
 class CameraLaunchViewModel: ObservableObject {
     @Published var isLaunchedCamera = false

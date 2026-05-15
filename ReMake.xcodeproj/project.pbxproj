@@ -34,15 +34,31 @@
 		17825B932DF444F80017DBEB /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		17852F6C2FB36A99004DC508 /* Exceptions for "ReMake" folder in "ReMake" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				View/ReMakeTests/ReMakeTests.swift,
+			);
+			target = 17825AF12DEFEB8F0017DBEB /* ReMake */;
+		};
+		17852F6D2FB36A99004DC508 /* Exceptions for "ReMake" folder in "ReMakeTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				View/ReMakeTests/ReMakeTests.swift,
+			);
+			target = 17825AFE2DEFEB910017DBEB /* ReMakeTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		17825AF42DEFEB8F0017DBEB /* ReMake */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				17852F6C2FB36A99004DC508 /* Exceptions for "ReMake" folder in "ReMake" target */,
+				17852F6D2FB36A99004DC508 /* Exceptions for "ReMake" folder in "ReMakeTests" target */,
+			);
 			path = ReMake;
-			sourceTree = "<group>";
-		};
-		17825B022DEFEB910017DBEB /* ReMakeTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ReMakeTests;
 			sourceTree = "<group>";
 		};
 		17825B0C2DEFEB910017DBEB /* ReMakeUITests */ = {
@@ -88,7 +104,6 @@
 			children = (
 				17825B772DF349FE0017DBEB /* New Folder */,
 				17825AF42DEFEB8F0017DBEB /* ReMake */,
-				17825B022DEFEB910017DBEB /* ReMakeTests */,
 				17825B0C2DEFEB910017DBEB /* ReMakeUITests */,
 				17825B922DF444F80017DBEB /* Frameworks */,
 				17825AF32DEFEB8F0017DBEB /* Products */,
@@ -151,9 +166,6 @@
 			);
 			dependencies = (
 				17825B012DEFEB910017DBEB /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				17825B022DEFEB910017DBEB /* ReMakeTests */,
 			);
 			name = ReMakeTests;
 			packageProductDependencies = (
