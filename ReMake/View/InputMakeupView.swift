@@ -11,91 +11,15 @@ import _SwiftData_SwiftUI
 
 
 struct InputMakeupView: View {
-    
-    //カテゴリとか種別のものはenumの方が可読性が良い！
-    enum SelectionType {
-        case eye, lip, highlight, eyebrow, base, cheek, mascara, eyeshadow, eyeliner, colorlense
-    }
-    
-    @State var makeName: String = ""
-    @State var comment: String = ""
-    @State var URLcomment: String = ""
-
-    @State private var imageIndex: Int = 0
-
-    @State private var showAlert: Bool = false
-
-    @State private var showPickerSheet = false
-    @State private var selectedEye = ""
-    @State private var selectedLip = ""
-    @State private var selectedHighlight = ""
-    @State private var selectedEyebrow = ""
-    @State private var selectedBase = ""
-    @State private var selectedCheek = ""
-    @State private var selectedMascara = ""
-    @State private var selectedEyeshadow = ""
-    @State private var selectedEyeliner = ""
-    @State private var selectedColorlense = ""
-    @State private var currentSelection: SelectionType? = nil
-    @State private var sheetTitle: String = ""
-    @State private var selectedItems: [SelectionType: String] = [:]
-    @State private var selectedItemLists: [SelectionType: [String]] = [:]
-
-    @StateObject private var viewModel = CameraLaunchViewModel()
-
-    // 追加: 撮影後のデータ一時保存
-    @State private var tempFaceImageData: Data? = nil
-    @State private var tempEyeImageData: Data? = nil
+    @StateObject private var viewModel = InputMakeupViewModel()
+    @StateObject private var cameraViewModel = CameraLaunchViewModel()
 
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
     @Binding var path: NavigationPath
     @Query private var cosmetics: [Cosmetic]
 
-var pickerOptions: [String] {
-    guard let current = currentSelection else { return [] }
-    switch current {
-    case .base:
-        let baseCategories = ["化粧下地", "ファンデーション", "コンシーラー"]
-        let filtered = cosmetics
-            .filter { baseCategories.contains($0.category) }
-            .map { $0.listProduct }
-        return filtered.isEmpty ? ["（登録されたコスメがありません）"] : filtered
-    default:
-        let categoryTitle: String = {
-            switch current {
-            case .eye: return "アイ"
-            case .lip: return "リップ"
-            case .highlight: return "ハイライト・シェーディング"
-            case .eyebrow: return "アイブロウ"
-            case .cheek: return "チーク"
-            case .mascara: return "マスカラ"
-            case .eyeshadow: return "アイシャドウ"
-            case .eyeliner: return "アイライナー"
-            case .colorlense: return "カラコン"
-            case .base: return "" // handled above
-            }
-        }()
-        let filtered = cosmetics.filter { $0.category == categoryTitle }.map { $0.listProduct }
-        return filtered.isEmpty ? ["（登録されたコスメがありません）"] : filtered
-    }
-}
-    
-    func bindingForCurrentSelection() -> Binding<String> {
-        //enumとswitch文は相性が良い！
-        switch currentSelection {
-        case .eye: return $selectedEye
-        case .lip: return $selectedLip
-        case .highlight: return $selectedHighlight
-        case .eyebrow: return $selectedEyebrow
-        case .base: return $selectedBase
-        case .cheek: return $selectedCheek
-        case .eyeliner: return $selectedEyeliner
-        case .eyeshadow: return $selectedEyeshadow
-        case .colorlense: return $selectedColorlense
-        case .mascara: return $selectedMascara
-        case .none: return .constant("")
-        }
+    var pickerOptions: [String] {
+        viewModel.pickerOptions(from: cosmetics)
     }
     
     var body: some View {
@@ -105,27 +29,9 @@ var pickerOptions: [String] {
                 HStack {
                     Spacer()
                     Button {
-                        let record = MakeupRecord(
-                            name: makeName,
-                            comment: comment,
-                            url: URLcomment,
-                            faceImageData: tempFaceImageData,
-                            eyeImageData: tempEyeImageData
-                        )
-                        // Save as: [String: String] with joined values
-                        record.selectedItems = selectedItemLists.reduce(into: [:]) { result, pair in
-                            result[String(describing: pair.key)] = pair.value.joined(separator: ", ")
-                        }
-                        modelContext.insert(record)
-                        do {
-                            try modelContext.save()
-                        } catch {
-                            print("保存に失敗しました: \(error)")
-                        }
-                        viewModel.imageData = Data()
-                        viewModel.capturedType = nil
-                        tempFaceImageData = nil
-                        tempEyeImageData = nil
+                        viewModel.saveMakeup(to: modelContext)
+                        cameraViewModel.imageData = Data()
+                        cameraViewModel.capturedType = nil
                         path.removeLast()
                     } label: {
                         Text("完了")
@@ -145,25 +51,25 @@ var pickerOptions: [String] {
                                 .named("ImageEye"),
                                 .named("pinkPaper"),
                                 .named("morepinkPaper")
-                            ], index: $imageIndex)
+                            ], index: $viewModel.imageIndex)
                             .frame(width: 370, height: 370)
                             
                             HStack(spacing: 8) {
                                 ForEach(0..<4, id: \.self) { i in
                                     Circle()
-                                        .fill(i == imageIndex ? Color.primary : Color.secondary.opacity(0.4))
+                                        .fill(i == viewModel.imageIndex ? Color.primary : Color.secondary.opacity(0.4))
                                         .frame(width: 8, height: 8)
                                 }
                             }
                         }
                         .padding(.top, 8)
                         
-                        if imageIndex == 0 {
+                        if viewModel.imageIndex == 0 {
                             // Add six plus buttons over the image with selected value display
                             // Example for .lip
                             VStack(spacing: 0) {
-                                if let values = selectedItemLists[.lip] {
-                                    Text(sectionTitle(for: .lip))
+                                if let values = viewModel.selectedItemLists[.lip] {
+                                    Text(viewModel.sectionTitle(for: .lip))
                                         .font(.caption)
                                         .bold()
                                         .foregroundColor(.black)
@@ -179,9 +85,7 @@ var pickerOptions: [String] {
                                     }
                                 }
                                 Button(action: {
-                                    sheetTitle = "リップを選択"
-                                    currentSelection = .lip
-                                    showPickerSheet = true
+                                    viewModel.setPicker(selection: .lip, title: "リップを選択")
                                 }) {
                                     Image(systemName: "plus.circle")
                                         .resizable()
@@ -192,8 +96,8 @@ var pickerOptions: [String] {
                             .position(x: 218, y: 285) //リップ
 
                             VStack(spacing: 0) {
-                                if let values = selectedItemLists[.highlight] {
-                                    Text(sectionTitle(for: .highlight))
+                                if let values = viewModel.selectedItemLists[.highlight] {
+                                    Text(viewModel.sectionTitle(for: .highlight))
                                         .font(.caption)
                                         .bold()
                                         .foregroundColor(.black)
@@ -209,9 +113,7 @@ var pickerOptions: [String] {
                                     }
                                 }
                                 Button(action: {
-                                    sheetTitle = "ハイライト・シェーディングを選択"
-                                    currentSelection = .highlight
-                                    showPickerSheet = true
+                                    viewModel.setPicker(selection: .highlight, title: "ハイライト・シェーディングを選択")
                                 }) {
                                     Image(systemName: "plus.circle")
                                         .resizable()
@@ -222,8 +124,8 @@ var pickerOptions: [String] {
                             .position(x: 200, y: 208) //ハイライト・シェーディング
 
                             VStack(spacing: 0) {
-                                if let values = selectedItemLists[.eyebrow] {
-                                    Text(sectionTitle(for: .eyebrow))
+                                if let values = viewModel.selectedItemLists[.eyebrow] {
+                                    Text(viewModel.sectionTitle(for: .eyebrow))
                                         .font(.caption)
                                         .bold()
                                         .foregroundColor(.black)
@@ -239,9 +141,7 @@ var pickerOptions: [String] {
                                     }
                                 }
                                 Button(action: {
-                                    sheetTitle = "アイブロウを選択"
-                                    currentSelection = .eyebrow
-                                    showPickerSheet = true
+                                    viewModel.setPicker(selection: .eyebrow, title: "アイブロウを選択")
                                 }) {
                                     Image(systemName: "plus.circle")
                                         .resizable()
@@ -250,14 +150,14 @@ var pickerOptions: [String] {
                                 }
                             }
                             .position(x: 278, y: 152) //アイブロウ
-                            .sheet(isPresented: $showPickerSheet) {
+                            .sheet(isPresented: $viewModel.showPickerSheet) {
                                 VStack {
-                                    Text(sheetTitle)
+                                    Text(viewModel.sheetTitle)
                                         .font(.headline)
                                         .padding()
 
                                     if pickerOptions.first != "（登録されたコスメがありません）" {
-                                        Picker("選択", selection: bindingForCurrentSelection()) {
+                                        Picker("選択", selection: viewModel.currentSelectionBinding()) {
                                             ForEach(pickerOptions, id: \.self) { option in
                                                 Text(option)
                                             }
@@ -267,25 +167,13 @@ var pickerOptions: [String] {
 
                                         HStack {
                                             Button("キャンセル") {
-                                                showPickerSheet = false
+                                                viewModel.showPickerSheet = false
                                             }
                                             .padding(.leading, 16)
                                             Spacer()
                                             Button("完了") {
-                                                if let selection = currentSelection {
-                                                    let newValue = bindingForCurrentSelection().wrappedValue
-                                                    if !newValue.isEmpty {
-                                                        if var list = selectedItemLists[selection] {
-                                                            if !list.contains(newValue) {
-                                                                list.append(newValue)
-                                                                selectedItemLists[selection] = list
-                                                            }
-                                                        } else {
-                                                            selectedItemLists[selection] = [newValue]
-                                                        }
-                                                    }
-                                                }
-                                                showPickerSheet = false
+                                                viewModel.addSelectedValue()
+                                                viewModel.showPickerSheet = false
                                             }
                                         }
                                         .padding(.leading, 16)
@@ -295,7 +183,7 @@ var pickerOptions: [String] {
                                             .foregroundColor(.gray)
                                             .padding()
                                         Button("閉じる") {
-                                            showPickerSheet = false
+                                            viewModel.showPickerSheet = false
                                         }
                                     }
                                 }
@@ -308,8 +196,8 @@ var pickerOptions: [String] {
                             }
 
                             VStack(spacing: 0) {
-                                if let values = selectedItemLists[.base] {
-                                    Text(sectionTitle(for: .base))
+                                if let values = viewModel.selectedItemLists[.base] {
+                                    Text(viewModel.sectionTitle(for: .base))
                                         .font(.caption)
                                         .bold()
                                         .foregroundColor(.black)
@@ -325,9 +213,7 @@ var pickerOptions: [String] {
                                     }
                                 }
                                 Button(action: {
-                                    sheetTitle = "ベースメイクを選択"
-                                    currentSelection = .base
-                                    showPickerSheet = true
+                                    viewModel.setPicker(selection: .base, title: "ベースメイクを選択")
                                 }) {
                                     Image(systemName: "plus.circle")
                                         .resizable()
@@ -338,8 +224,8 @@ var pickerOptions: [String] {
                             .position(x: 135, y: 247) //ベースメイク
 
                             VStack(spacing: 0) {
-                                if let values = selectedItemLists[.cheek] {
-                                    Text(sectionTitle(for: .cheek))
+                                if let values = viewModel.selectedItemLists[.cheek] {
+                                    Text(viewModel.sectionTitle(for: .cheek))
                                         .font(.caption)
                                         .bold()
                                         .foregroundColor(.black)
@@ -355,9 +241,7 @@ var pickerOptions: [String] {
                                     }
                                 }
                                 Button(action: {
-                                    sheetTitle = "チークを選択"
-                                    currentSelection = .cheek
-                                    showPickerSheet = true
+                                    viewModel.setPicker(selection: .cheek, title: "チークを選択")
                                 }) {
                                     Image(systemName: "plus.circle")
                                         .resizable()
@@ -366,11 +250,11 @@ var pickerOptions: [String] {
                                 }
                             }
                             .position(x: 270, y: 230) //チーク
-                        }else if imageIndex == 1 {
+                        }else if viewModel.imageIndex == 1 {
                             ZStack {
                                 VStack(spacing: 0) {
-                                    if let values = selectedItemLists[.eyeshadow] {
-                                        Text(sectionTitle(for: .eyeshadow))
+                                    if let values = viewModel.selectedItemLists[.eyeshadow] {
+                                        Text(viewModel.sectionTitle(for: .eyeshadow))
                                             .font(.caption)
                                             .bold()
                                             .foregroundColor(.black)
@@ -386,9 +270,7 @@ var pickerOptions: [String] {
                                         }
                                     }
                                     Button(action: {
-                                        currentSelection = .eyeshadow
-                                        sheetTitle = "アイシャドウを選択"
-                                        showPickerSheet = true
+                                        viewModel.setPicker(selection: .eyeshadow, title: "アイシャドウを選択")
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
@@ -397,14 +279,14 @@ var pickerOptions: [String] {
                                     }
                                 }
                                 .position(x: 140, y: 110)
-                                .sheet(isPresented: $showPickerSheet) {
+                                .sheet(isPresented: $viewModel.showPickerSheet) {
                                     VStack {
-                                        Text(sheetTitle)
+                                        Text(viewModel.sheetTitle)
                                             .font(.headline)
                                             .padding()
 
                                         if pickerOptions.first != "（登録されたコスメがありません）" {
-                                            Picker("選択", selection: bindingForCurrentSelection()) {
+                                            Picker("選択", selection: viewModel.currentSelectionBinding()) {
                                                 ForEach(pickerOptions, id: \.self) { option in
                                                     Text(option)
                                                 }
@@ -414,25 +296,13 @@ var pickerOptions: [String] {
 
                                             HStack {
                                                 Button("キャンセル") {
-                                                    showPickerSheet = false
+                                                    viewModel.showPickerSheet = false
                                                 }
                                                 .padding(.leading, 16)
                                                 Spacer()
                                                 Button("完了") {
-                                                    if let selection = currentSelection {
-                                                        let newValue = bindingForCurrentSelection().wrappedValue
-                                                        if !newValue.isEmpty {
-                                                            if var list = selectedItemLists[selection] {
-                                                                if !list.contains(newValue) {
-                                                                    list.append(newValue)
-                                                                    selectedItemLists[selection] = list
-                                                                }
-                                                            } else {
-                                                                selectedItemLists[selection] = [newValue]
-                                                            }
-                                                        }
-                                                    }
-                                                    showPickerSheet = false
+                                                    viewModel.addSelectedValue()
+                                                    viewModel.showPickerSheet = false
                                                 }
                                             }
                                             .padding(.leading, 16)
@@ -442,7 +312,7 @@ var pickerOptions: [String] {
                                                 .foregroundColor(.gray)
                                                 .padding()
                                             Button("閉じる") {
-                                                showPickerSheet = false
+                                                viewModel.showPickerSheet = false
                                             }
                                         }
                                     }
@@ -455,8 +325,8 @@ var pickerOptions: [String] {
                                 }//アイシャドウ
 
                                 VStack(spacing: 0) {
-                                    if let values = selectedItemLists[.mascara] {
-                                        Text(sectionTitle(for: .mascara))
+                                    if let values = viewModel.selectedItemLists[.mascara] {
+                                        Text(viewModel.sectionTitle(for: .mascara))
                                             .font(.caption)
                                             .bold()
                                             .foregroundColor(.black)
@@ -472,9 +342,7 @@ var pickerOptions: [String] {
                                         }
                                     }
                                     Button(action: {
-                                        currentSelection = .mascara
-                                        sheetTitle = "マスカラを選択"
-                                        showPickerSheet = true
+                                        viewModel.setPicker(selection: .mascara, title: "マスカラを選択")
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
@@ -485,8 +353,8 @@ var pickerOptions: [String] {
                                 .position(x: 270, y: 100) // マスカラ
 
                                 VStack(spacing: 0) {
-                                    if let values = selectedItemLists[.colorlense] {
-                                        Text(sectionTitle(for: .colorlense))
+                                    if let values = viewModel.selectedItemLists[.colorlense] {
+                                        Text(viewModel.sectionTitle(for: .colorlense))
                                             .font(.caption)
                                             .bold()
                                             .foregroundColor(.black)
@@ -502,9 +370,7 @@ var pickerOptions: [String] {
                                         }
                                     }
                                     Button(action: {
-                                        currentSelection = .colorlense
-                                        sheetTitle = "カラコンを選択"
-                                        showPickerSheet = true
+                                        viewModel.setPicker(selection: .colorlense, title: "カラコンを選択")
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
@@ -515,8 +381,8 @@ var pickerOptions: [String] {
                                 .position(x: 180, y: 205) // カラコン
 
                                 VStack(spacing: 0) {
-                                    if let values = selectedItemLists[.eyeliner] {
-                                        Text(sectionTitle(for: .eyeliner))
+                                    if let values = viewModel.selectedItemLists[.eyeliner] {
+                                        Text(viewModel.sectionTitle(for: .eyeliner))
                                             .font(.caption)
                                             .bold()
                                             .foregroundColor(.black)
@@ -532,9 +398,7 @@ var pickerOptions: [String] {
                                         }
                                     }
                                     Button(action: {
-                                        currentSelection = .eyeliner
-                                        sheetTitle = "アイラインを選択"
-                                        showPickerSheet = true
+                                        viewModel.setPicker(selection: .eyeliner, title: "アイラインを選択")
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
@@ -545,11 +409,11 @@ var pickerOptions: [String] {
                                 .position(x: 328, y: 170) // アイライン
                                 // 目
                             }
-                        }else if imageIndex == 2 {
-                            // tempFaceImageData の画像表示
-                            if let data = tempFaceImageData, let uiImage = UIImage(data: data) {
+                        }else if viewModel.imageIndex == 2 {
+                            // viewModel.tempFaceImageData の画像表示
+                            if let data = viewModel.tempFaceImageData, let uiImage = UIImage(data: data) {
                                 Button {
-                                    tempFaceImageData = nil
+                                    viewModel.tempFaceImageData = nil
                                 } label: {
                                     Image(uiImage: uiImage)
                                         .resizable()
@@ -561,32 +425,32 @@ var pickerOptions: [String] {
                             VStack {
                                 Spacer()
                                 Button("顔全体の写真") {
-                                    showAlert.toggle()
+                                    viewModel.showAlert.toggle()
                                 }
                                 .bold()
                                 .font(.system(size: 50))
                                 .foregroundColor(.black)
                                 .padding(.top, 20)
                                 Spacer()
-                                .alert("顔全体の写真を撮る",isPresented: $showAlert) {
+                                .alert("顔全体の写真を撮る",isPresented: $viewModel.showAlert) {
                                     Button("キャンセル") {}
                                     Button("はい") {
-                                        showAlert = false
-                                        viewModel.isLaunchedCamera = true
-                                        viewModel.capturedType = "face"
+                                        viewModel.showAlert = false
+                                        cameraViewModel.isLaunchedCamera = true
+                                        cameraViewModel.capturedType = "face"
                                     }
                                 } message: {
                                     Text("フラッシュをたこう！")
                                 }
                             }
-                            .fullScreenCover(isPresented: $viewModel.isLaunchedCamera) {
-                                Imagepicker(show: $viewModel.isLaunchedCamera, image: $viewModel.imageData)
+                            .fullScreenCover(isPresented: $cameraViewModel.isLaunchedCamera) {
+                                Imagepicker(show: $cameraViewModel.isLaunchedCamera, image: $cameraViewModel.imageData)
                             }
-                        }else if imageIndex == 3 {
-                            // tempEyeImageData の画像表示
-                            if let data = tempEyeImageData, let uiImage = UIImage(data: data) {
+                        }else if viewModel.imageIndex == 3 {
+                            // viewModel.tempEyeImageData の画像表示
+                            if let data = viewModel.tempEyeImageData, let uiImage = UIImage(data: data) {
                                 Button {
-                                    tempEyeImageData = nil
+                                    viewModel.tempEyeImageData = nil
                                 } label: {
                                     Image(uiImage: uiImage)
                                         .resizable()
@@ -598,26 +462,26 @@ var pickerOptions: [String] {
                             VStack {
                                 Spacer()
                                 Button("目元の写真") {
-                                    showAlert.toggle()
+                                    viewModel.showAlert.toggle()
                                 }
                                 .bold()
                                 .font(.system(size: 50))
                                 .foregroundColor(.black)
                                 .padding(.top, 20)
                                 Spacer()
-                                .alert("目元の写真を撮る",isPresented: $showAlert) {
+                                .alert("目元の写真を撮る",isPresented: $viewModel.showAlert) {
                                     Button("キャンセル") {}
                                     Button("はい") {
-                                        showAlert = false
-                                        viewModel.isLaunchedCamera = true
-                                        viewModel.capturedType = "eye"
+                                        viewModel.showAlert = false
+                                        cameraViewModel.isLaunchedCamera = true
+                                        cameraViewModel.capturedType = "eye"
                                     }
                                 } message: {
                                     Text("フラッシュをたこう！")
                                 }
                             }
-                            .fullScreenCover(isPresented: $viewModel.isLaunchedCamera) {
-                                Imagepicker(show: $viewModel.isLaunchedCamera, image: $viewModel.imageData)
+                            .fullScreenCover(isPresented: $cameraViewModel.isLaunchedCamera) {
+                                Imagepicker(show: $cameraViewModel.isLaunchedCamera, image: $cameraViewModel.imageData)
                             }
                         }
                     }
@@ -628,21 +492,21 @@ var pickerOptions: [String] {
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 50)
-                TextField("メイクのタイトルを入力してください", text: $makeName)
+                TextField("メイクのタイトルを入力してください", text: $viewModel.makeName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .frame(width: 300, height: 45)
                 Text("コメント")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 50)
-                TextField("コメントを入力してください", text: $comment)
+                TextField("コメントを入力してください", text: $viewModel.comment)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .frame(width: 300, height: 45)
                 Text("参考にした記事・動画のURL")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 50)
-                TextField("URLを入力してください", text: $URLcomment)
+                TextField("URLを入力してください", text: $viewModel.urlComment)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .frame(width: 300, height: 45)
                 
@@ -654,35 +518,12 @@ var pickerOptions: [String] {
             }
         }
         // .onChangeで撮影後のデータを一時保存
-        .onChange(of: viewModel.imageData) { newData in
-            if let type = viewModel.capturedType {
-                if type == "face" {
-                    tempFaceImageData = newData
-                } else if type == "eye" {
-                    tempEyeImageData = newData
-                }
-            }
+        .onChange(of: cameraViewModel.imageData) { newData in
+            viewModel.updateCapturedImage(newData, type: cameraViewModel.capturedType)
         }
     }
 }
 
 #Preview {
     InputMakeupView(path: .constant(NavigationPath()))
-}
-
-extension InputMakeupView {
-    func sectionTitle(for selection: SelectionType) -> String {
-        switch selection {
-        case .eye: return "アイ"
-        case .lip: return "リップ"
-        case .highlight: return "ハイライト・シェーディング"
-        case .eyebrow: return "アイブロウ"
-        case .base: return "ベースメイク"
-        case .cheek: return "チーク"
-        case .mascara: return "マスカラ"
-        case .eyeshadow: return "アイシャドウ"
-        case .eyeliner: return "アイライン"
-        case .colorlense: return "カラコン"
-        }
-    }
 }

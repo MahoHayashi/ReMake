@@ -12,59 +12,9 @@ import SwiftData
 
 
 struct InputCosmeView: View {
-    struct CollapsibleSection: Identifiable {
-        let id = UUID()
-        let title: String
-        var items: [String]
-        var isExpanded: Bool = true
-    }
-
-    @State public var sections = [
-        CollapsibleSection(title: "化粧下地", items: []),
-        CollapsibleSection(title: "ファンデーション", items: []),
-        CollapsibleSection(title: "コンシーラー", items: []),
-        CollapsibleSection(title: "チーク", items: []),
-        CollapsibleSection(title: "ハイライト・シェーディング", items: []),
-        CollapsibleSection(title: "アイシャドウ", items: []),
-        CollapsibleSection(title: "アイライナー", items: []),
-        CollapsibleSection(title: "マスカラ", items: []),
-        CollapsibleSection(title: "カラコン", items: []),
-        CollapsibleSection(title: "アイブロウ", items: []),
-        CollapsibleSection(title: "リップ", items: []),
-    ]
-    
-    @State private var showsheet = false
+    @StateObject private var viewModel = InputCosmeViewModel()
     @Environment(\.modelContext) private var modelContext
     @Query  var cosmetics: [Cosmetic]
-
-    //titleにあったitemに追加する関数
-    func addProductToSection(title: String, product: String) {
-        let updatedProducts = cosmetics
-            .filter { $0.category == title }
-            .map { $0.listProduct }
-
-        if let index = sections.firstIndex(where: { $0.title == title }) {
-            sections[index].items = updatedProducts
-        }
-    }
-    
-    func updateSections() {
-        for index in sections.indices {
-            let title = sections[index].title
-            let products = cosmetics
-                .filter { $0.category == title }
-                .map { $0.listProduct }
-            sections[index].items = products
-        }
-    }
-    
-    //コスメを追加する関数(関数作らずに.insertだけでよかったかも)
-    private func addCosmetic(brand: String, product: String, color: String, category: String) {
-        let newCosmetic = Cosmetic(brand: brand, product: product, color: color, category: category)
-        modelContext.insert(newCosmetic)
-        try? modelContext.save()
-        updateSections()
-    }
 
     var body: some View {
         VStack {
@@ -72,9 +22,7 @@ struct InputCosmeView: View {
             HStack {
                 Spacer()
                 Button(action: {
-                    //アクションの内容をここに書く
-                    //ボタンが押されたらshowsheetプロパティを反転する
-                    self.showsheet.toggle()
+                    viewModel.showsheet.toggle()
                 }) {
                     Image(systemName: "plus")
                         .font(.system(size: 24))
@@ -82,10 +30,16 @@ struct InputCosmeView: View {
                         .padding()
                         .background(Circle().fill(Color(red: 0xA6/255.0, green: 0x80/255.0, blue: 0x76/255.0)))
                 }
-                //showsheet
-                .sheet(isPresented: $showsheet){
-                    Mysheet(sections: sections) { category, brand, product, color in
-                        addCosmetic(brand: brand, product: product, color: color, category: category)
+                .sheet(isPresented: $viewModel.showsheet){
+                    Mysheet(sections: viewModel.sections) { category, brand, product, color in
+                        viewModel.addCosmetic(
+                            brand: brand,
+                            product: product,
+                            color: color,
+                            category: category,
+                            to: modelContext,
+                            existingCosmetics: cosmetics
+                        )
                     }
                     .presentationDetents([
                         .medium,
@@ -97,7 +51,7 @@ struct InputCosmeView: View {
                 .padding()
             }
             List {
-                ForEach($sections) { $section in
+                ForEach($viewModel.sections) { $section in
                     DisclosureGroup(isExpanded: $section.isExpanded) {
                         ForEach(section.items, id: \.self) { item in
                             Text(item)
@@ -105,14 +59,12 @@ struct InputCosmeView: View {
                         }
                         //削除機能
                         .onDelete { indexSet in
-                            for index in indexSet {
-                                let itemToDelete = section.items[index]
-                                if let cosmeticToDelete = cosmetics.first(where: { $0.listProduct == itemToDelete }) {
-                                    modelContext.delete(cosmeticToDelete)
-                                }
-                            }
-                            try? modelContext.save()
-                            updateSections()
+                            viewModel.deleteCosmetics(
+                                at: indexSet,
+                                in: section,
+                                from: modelContext,
+                                cosmetics: cosmetics
+                            )
                         }
                     } label: {
                         Text(section.title)
@@ -121,34 +73,23 @@ struct InputCosmeView: View {
                 }
             }
         }
-        //画面が開かれたとき、初期設定をしている
         .onAppear {
-            for index in sections.indices {
-                let title = sections[index].title
-                let products = cosmetics
-                    .filter { $0.category == title }
-                    .map { $0.listProduct }
-                sections[index].items = products
-            }
+            viewModel.updateSections(from: cosmetics)
+        }
+        .onChange(of: cosmetics.map(\.id)) { _ in
+            viewModel.updateSections(from: cosmetics)
         }
     }
 }
 
 struct Mysheet: View {
     @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) private var modelContext
-    var sections: [InputCosmeView.CollapsibleSection]
+    var sections: [InputCosmeViewModel.CollapsibleSection]
     @State public var brand: String = ""
     @State public var product: String = ""
     @State public var color: String = ""
-    @State private var category = 1
     @State private var selectedCategory: String = "化粧下地"
-    @Query var cosmetics: [Cosmetic]
     var onComplete: (String, String, String, String) -> Void
-    
-    var listProduct: String {
-        brand + " " + product + " " + color
-       }
 
     var body: some View {
         VStack {

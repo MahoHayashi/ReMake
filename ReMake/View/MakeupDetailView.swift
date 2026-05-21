@@ -3,62 +3,12 @@ import Foundation
 import SwiftData
 
 struct  MakeupDetailView: View {
-    
-    enum SelectionType: String {
-        case eye, lip, highlight, eyebrow, base, cheek, mascara, eyeshadow, eyeliner, colorlense
-    }
-    
-    @State var makeName: String = ""
-    @State var comment: String = ""
-    @State var URLcomment: String = ""
-
-    @State private var imageIndex: Int = 0
-
-    @State private var showAlert: Bool = false
-
-    @State private var showPickerSheet = false
-    @State private var selectedEye = ""
-    @State private var selectedLip = ""
-    @State private var selectedHighlight = ""
-    @State private var selectedEyebrow = ""
-    @State private var selectedBase = ""
-    @State private var selectedCheek = ""
-    @State private var selectedMascara = ""
-    @State private var selectedEyeshadow = ""
-    @State private var selectedEyeliner = ""
-    @State private var selectedColorlense = ""
-    @State private var currentSelection: SelectionType? = nil
-    @State private var sheetTitle: String = ""
-    @State private var selectedItems: [SelectionType: String] = [:]
-    
     let record: MakeupRecord
+    @StateObject private var viewModel: MakeupDetailViewModel
 
     init(record: MakeupRecord) {
         self.record = record
-        var mapped: [SelectionType: String] = [:]
-        for (key, value) in record.selectedItems {
-            if let selection = SelectionType(rawValue: key) {
-                mapped[selection] = value
-            }
-        }
-        _selectedItems = State(initialValue: mapped)
-    }
-    @Query private var cosmetics: [Cosmetic]
-    
-    func bindingForCurrentSelection() -> Binding<String> {
-        switch currentSelection {
-        case .eye: return $selectedEye
-        case .lip: return $selectedLip
-        case .highlight: return $selectedHighlight
-        case .eyebrow: return $selectedEyebrow
-        case .base: return $selectedBase
-        case .cheek: return $selectedCheek
-        case .eyeliner: return $selectedEyeliner
-        case .eyeshadow: return $selectedEyeshadow
-        case .colorlense: return $selectedColorlense
-        case .mascara: return $selectedMascara
-        case .none: return .constant("")
-        }
+        _viewModel = StateObject(wrappedValue: MakeupDetailViewModel(record: record))
     }
     
     var body: some View {
@@ -72,25 +22,25 @@ struct  MakeupDetailView: View {
                             .named("ImageEye"),
                             .uiImage(record.faceImageData != nil ? UIImage(data: record.faceImageData!) ?? UIImage() : UIImage()),
                             .uiImage(record.eyeImageData != nil ? UIImage(data: record.eyeImageData!) ?? UIImage() : UIImage())
-                        ], index: $imageIndex)
+                        ], index: $viewModel.imageIndex)
                         .frame(width: 370, height: 370)
                         
                         HStack(spacing: 8) {
                             ForEach(0..<4, id: \.self) { i in
                                 Circle()
-                                    .fill(i == imageIndex ? Color.primary : Color.secondary.opacity(0.4))
+                                    .fill(i == viewModel.imageIndex ? Color.primary : Color.secondary.opacity(0.4))
                                     .frame(width: 8, height: 8)
                             }
                         }
                         .padding(.top, 16)
                     }
                     
-                    if imageIndex == 0 {
+                    if viewModel.imageIndex == 0 {
                         VStack(spacing: 0) {
-                            if let value = selectedItems[.lip], !value.isEmpty {
-                                let values = value.components(separatedBy: ", ")
+                            let values = viewModel.values(for: .lip)
+                            if !values.isEmpty {
                                 VStack(spacing: 2) {
-                                    Text("リップ")
+                                    Text(viewModel.title(for: .lip))
                                         .font(.caption)
                                         .bold()
                                         .foregroundColor(.black)
@@ -109,10 +59,10 @@ struct  MakeupDetailView: View {
                         }
                         .position(x: 218, y: 285)
                         VStack(spacing: 0) {
-                            if let value = selectedItems[.highlight], !value.isEmpty {
-                                let values = value.components(separatedBy: ", ")
+                            let values = viewModel.values(for: .highlight)
+                            if !values.isEmpty {
                                 VStack(spacing: 2) {
-                                    Text("ハイライト")
+                                    Text(viewModel.title(for: .highlight))
                                         .font(.caption)
                                         .bold()
                                         .foregroundColor(.black)
@@ -131,10 +81,10 @@ struct  MakeupDetailView: View {
                         }
                         .position(x: 200, y: 208)
                         VStack(spacing: 0) {
-                            if let value = selectedItems[.eyebrow], !value.isEmpty {
-                                let values = value.components(separatedBy: ", ")
+                            let values = viewModel.values(for: .eyebrow)
+                            if !values.isEmpty {
                                 VStack(spacing: 2) {
-                                    Text("アイブロウ")
+                                    Text(viewModel.title(for: .eyebrow))
                                         .font(.caption)
                                         .bold()
                                         .foregroundColor(.black)
@@ -153,10 +103,10 @@ struct  MakeupDetailView: View {
                         }
                         .position(x: 278, y: 152)
                         VStack(spacing: 0) {
-                            if let value = selectedItems[.base], !value.isEmpty {
-                                let values = value.components(separatedBy: ", ")
+                            let values = viewModel.values(for: .base)
+                            if !values.isEmpty {
                                 VStack(spacing: 2) {
-                                    Text("ベース")
+                                    Text(viewModel.title(for: .base))
                                         .font(.caption)
                                         .bold()
                                         .foregroundColor(.black)
@@ -175,10 +125,10 @@ struct  MakeupDetailView: View {
                         }
                         .position(x: 135, y: 247)
                         VStack(spacing: 0) {
-                            if let value = selectedItems[.cheek], !value.isEmpty {
-                                let values = value.components(separatedBy: ", ")
+                            let values = viewModel.values(for: .cheek)
+                            if !values.isEmpty {
                                 VStack(spacing: 2) {
-                                    Text("チーク")
+                                    Text(viewModel.title(for: .cheek))
                                         .font(.caption)
                                         .bold()
                                         .foregroundColor(.black)
@@ -196,13 +146,13 @@ struct  MakeupDetailView: View {
                             }
                         }
                         .position(x: 270, y: 230)
-                    } else if imageIndex == 1 {
+                    } else if viewModel.imageIndex == 1 {
                         ZStack {
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.eyeshadow], !value.isEmpty {
-                                    let values = value.components(separatedBy: ", ")
+                                let values = viewModel.values(for: .eyeshadow)
+                            if !values.isEmpty {
                                     VStack(spacing: 2) {
-                                        Text("アイシャドウ")
+                                        Text(viewModel.title(for: .eyeshadow))
                                             .font(.caption)
                                             .bold()
                                             .foregroundColor(.black)
@@ -221,10 +171,10 @@ struct  MakeupDetailView: View {
                             }
                             .position(x: 150, y: 90)
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.mascara], !value.isEmpty {
-                                    let values = value.components(separatedBy: ", ")
+                                let values = viewModel.values(for: .mascara)
+                            if !values.isEmpty {
                                     VStack(spacing: 2) {
-                                        Text("マスカラ")
+                                        Text(viewModel.title(for: .mascara))
                                             .font(.caption)
                                             .bold()
                                             .foregroundColor(.black)
@@ -243,10 +193,10 @@ struct  MakeupDetailView: View {
                             }
                             .position(x: 270, y: 100)
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.colorlense], !value.isEmpty {
-                                    let values = value.components(separatedBy: ", ")
+                                let values = viewModel.values(for: .colorlense)
+                            if !values.isEmpty {
                                     VStack(spacing: 2) {
-                                        Text("カラコン")
+                                        Text(viewModel.title(for: .colorlense))
                                             .font(.caption)
                                             .bold()
                                             .foregroundColor(.black)
@@ -265,10 +215,10 @@ struct  MakeupDetailView: View {
                             }
                             .position(x: 180, y: 205)
                             VStack(spacing: 0) {
-                                if let value = selectedItems[.eyeliner], !value.isEmpty {
-                                    let values = value.components(separatedBy: ", ")
+                                let values = viewModel.values(for: .eyeliner)
+                            if !values.isEmpty {
                                     VStack(spacing: 2) {
-                                        Text("アイライナー")
+                                        Text(viewModel.title(for: .eyeliner))
                                             .font(.caption)
                                             .bold()
                                             .foregroundColor(.black)

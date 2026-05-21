@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import SwiftData
 
 @MainActor
@@ -61,6 +62,20 @@ final class InputMakeupViewModel: ObservableObject {
 
     func setSelectedValue(_ value: String, for selection: SelectionType) {
         selectedValues[selection] = value
+    }
+
+    func selectedValueBinding(for selection: SelectionType) -> Binding<String> {
+        Binding(
+            get: { self.selectedValue(for: selection) },
+            set: { self.setSelectedValue($0, for: selection) }
+        )
+    }
+
+    func currentSelectionBinding() -> Binding<String> {
+        guard let currentSelection else {
+            return .constant("")
+        }
+        return selectedValueBinding(for: currentSelection)
     }
 
     func addSelectedValue() {

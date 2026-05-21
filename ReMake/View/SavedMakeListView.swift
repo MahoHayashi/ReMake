@@ -11,24 +11,8 @@ import SwiftData
 
 struct SavedMakeListView: View {
     @Query private var savedRecords: [MakeupRecord]
-    @State private var cards: [MakeupRecord] = []
     @State private var path = NavigationPath()
-    @Environment(\.modelContext) private var modelContext
-    
-    //比較モードが有効かどうかのBool
-    @State private var isComparisonMode = false
-    @State private var selectedCardIDs: Set<UUID> = []
-    @State private var showAlert = false
-    @State private var compareBeforeWord: String = "比較"
-    @State private var showComparisonView = false
-    
-//    private func deleteCard(_ card: MakeupRecord) {
-//        if let index = cards.firstIndex(where: { $0.id == card.id }) {
-//            cards.remove(at: index)
-//            modelContext.delete(card)
-//            try? modelContext.save()
-//        }
-//    }
+    @StateObject private var viewModel = SavedMakeListViewModel()
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -37,9 +21,9 @@ struct SavedMakeListView: View {
                 VStack(spacing: 0) {
                     HStack {
                         Button {
-                            isComparisonMode.toggle()//toggle()でBoolを反転
+                            viewModel.toggleComparisonMode()
                         } label: {
-                            Text(isComparisonMode ? "戻る" : "比較")
+                            Text(viewModel.isComparisonMode ? "戻る" : "比較")
                                 .font(.system(size: 25))
                                 .font(.headline)
                                 .frame(width: 80, height: 55)
@@ -51,15 +35,14 @@ struct SavedMakeListView: View {
                         Spacer()
                         ZStack(alignment: .topTrailing) {
                             
-                            if isComparisonMode {
-                                /*filter は **「条件を満たす要素だけを抽出する」**ときに使う*/
-                                NavigationLink(destination: CompareMakeupView(records: cards.filter { selectedCardIDs.contains($0.id) }), isActive: $showComparisonView) {
+                            if viewModel.isComparisonMode {
+                                NavigationLink(destination: CompareMakeupView(records: viewModel.selectedCards), isActive: $viewModel.showComparisonView) {
                                     EmptyView()
                                 }
                                 .hidden()
                                 
                                 Button(action: {
-                                    showComparisonView = true
+                                    viewModel.showComparisonView = true
                                 }) {
                                     Text("決定")
                                         .font(.system(size: 25))
@@ -91,7 +74,7 @@ struct SavedMakeListView: View {
 
                     ScrollView {
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                            ForEach(cards, id: \.id) { card in
+                            ForEach(viewModel.cards, id: \.id) { card in
                                 ZStack(alignment: .topTrailing) {
                                     NavigationLink(destination: MakeupDetailView(record: card)) {
                                         VStack {
@@ -111,20 +94,6 @@ struct SavedMakeListView: View {
                                             Text(card.name)
                                                 .bold()
                                                 .foregroundColor(.black)
-//                                            Button(action: {
-//                                                if let index = cards.firstIndex(where: { $0.id == card.id }) {
-//                                                    cards.remove(at: index)
-//                                                    modelContext.delete(card)
-//                                                    try? modelContext.save()
-//                                                }
-//                                            }) {
-//                                                Text("×")
-//                                                    .font(.caption)
-//                                                    .foregroundColor(.red)
-//                                                    .padding(6)
-//                                                    .background(Color.gray.opacity(0.1))
-//                                                    .cornerRadius(8)
-//                                            }
                                         }
                                         .frame(width: 130, height: 200)
                                         .padding()
@@ -133,29 +102,10 @@ struct SavedMakeListView: View {
                                         .clipped()
                                         .shadow(color: .gray.opacity(0.7), radius: 5)
                                     }
-//                                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-//                                        if !isComparisonMode {
-//                                            Button(role: .destructive) {
-//                                                if let index = cards.firstIndex(where: { $0.id == card.id }) {
-//                                                    cards.remove(at: index)
-//                                                    modelContext.delete(card)
-//                                                    try? modelContext.save()
-//                                                }
-//                                            } label: {
-//                                                Label("削除", systemImage: "trash")
-//                                            }
-//                                        }
-//                                    }
 
-                                    if isComparisonMode {
+                                    if viewModel.isComparisonMode {
                                         Button {
-                                            if selectedCardIDs.contains(card.id) {
-                                                selectedCardIDs.remove(card.id)
-                                            } else if selectedCardIDs.count < 2 {
-                                                selectedCardIDs.insert(card.id)
-                                            } else {
-                                                showAlert = true
-                                            }
+                                            viewModel.toggleSelection(for: card)
                                         } label: {
                                             Circle()
                                                 .fill(Color.white)
@@ -164,7 +114,7 @@ struct SavedMakeListView: View {
                                                     ZStack {
                                                         Circle()
                                                             .stroke(Color.gray, lineWidth: 2)
-                                                        if selectedCardIDs.contains(card.id) {
+                                                        if viewModel.selectedCardIDs.contains(card.id) {
                                                             Image(systemName: "checkmark")
                                                                 .font(.system(size: 30))
                                                                 .foregroundColor(.pink)
@@ -181,11 +131,14 @@ struct SavedMakeListView: View {
                     }
                 }
             }
-            .alert("選択できるメイクは二つまでです", isPresented: $showAlert) {
+            .alert("選択できるメイクは二つまでです", isPresented: $viewModel.showAlert) {
                 Button("OK", role: .cancel) { }
             }
             .onAppear {
-                cards = savedRecords
+                viewModel.updateCards(from: savedRecords)
+            }
+            .onChange(of: savedRecords.map(\.id)) { _ in
+                viewModel.updateCards(from: savedRecords)
             }
             .navigationDestination(for: String.self) { value in
                 if value == "input" {
