@@ -85,7 +85,7 @@ struct InputMakeupView: View {
                                     }
                                 }
                                 Button(action: {
-                                    viewModel.setPicker(selection: .lip, title: "リップを選択")
+                                    viewModel.setPicker(selection: .lip, title: "リップを選択", cosmetics: cosmetics)
                                 }) {
                                     Image(systemName: "plus.circle")
                                         .resizable()
@@ -113,7 +113,7 @@ struct InputMakeupView: View {
                                     }
                                 }
                                 Button(action: {
-                                    viewModel.setPicker(selection: .highlight, title: "ハイライト・シェーディングを選択")
+                                    viewModel.setPicker(selection: .highlight, title: "ハイライト・シェーディングを選択", cosmetics: cosmetics)
                                 }) {
                                     Image(systemName: "plus.circle")
                                         .resizable()
@@ -141,7 +141,7 @@ struct InputMakeupView: View {
                                     }
                                 }
                                 Button(action: {
-                                    viewModel.setPicker(selection: .eyebrow, title: "アイブロウを選択")
+                                    viewModel.setPicker(selection: .eyebrow, title: "アイブロウを選択", cosmetics: cosmetics)
                                 }) {
                                     Image(systemName: "plus.circle")
                                         .resizable()
@@ -213,7 +213,7 @@ struct InputMakeupView: View {
                                     }
                                 }
                                 Button(action: {
-                                    viewModel.setPicker(selection: .base, title: "ベースメイクを選択")
+                                    viewModel.setPicker(selection: .base, title: "ベースメイクを選択", cosmetics: cosmetics)
                                 }) {
                                     Image(systemName: "plus.circle")
                                         .resizable()
@@ -241,7 +241,7 @@ struct InputMakeupView: View {
                                     }
                                 }
                                 Button(action: {
-                                    viewModel.setPicker(selection: .cheek, title: "チークを選択")
+                                    viewModel.setPicker(selection: .cheek, title: "チークを選択", cosmetics: cosmetics)
                                 }) {
                                     Image(systemName: "plus.circle")
                                         .resizable()
@@ -270,7 +270,7 @@ struct InputMakeupView: View {
                                         }
                                     }
                                     Button(action: {
-                                        viewModel.setPicker(selection: .eyeshadow, title: "アイシャドウを選択")
+                                        viewModel.setPicker(selection: .eyeshadow, title: "アイシャドウを選択", cosmetics: cosmetics)
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
@@ -342,7 +342,7 @@ struct InputMakeupView: View {
                                         }
                                     }
                                     Button(action: {
-                                        viewModel.setPicker(selection: .mascara, title: "マスカラを選択")
+                                        viewModel.setPicker(selection: .mascara, title: "マスカラを選択", cosmetics: cosmetics)
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
@@ -370,7 +370,7 @@ struct InputMakeupView: View {
                                         }
                                     }
                                     Button(action: {
-                                        viewModel.setPicker(selection: .colorlense, title: "カラコンを選択")
+                                        viewModel.setPicker(selection: .colorlense, title: "カラコンを選択", cosmetics: cosmetics)
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()
@@ -398,7 +398,7 @@ struct InputMakeupView: View {
                                         }
                                     }
                                     Button(action: {
-                                        viewModel.setPicker(selection: .eyeliner, title: "アイラインを選択")
+                                        viewModel.setPicker(selection: .eyeliner, title: "アイラインを選択", cosmetics: cosmetics)
                                     }) {
                                         Image(systemName: "plus.circle")
                                             .resizable()

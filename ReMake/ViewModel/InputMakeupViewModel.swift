@@ -90,9 +90,15 @@ final class InputMakeupViewModel: ObservableObject {
         }
     }
 
-    func setPicker(selection: SelectionType, title: String) {
+    func setPicker(selection: SelectionType, title: String, cosmetics: [Cosmetic]) {
         currentSelection = selection
         sheetTitle = title
+        if selectedValues[selection] == nil || selectedValues[selection]!.isEmpty {
+            let options = pickerOptions(from: cosmetics)
+            if let first = options.first, first != "（登録されたコスメがありません）" {
+                selectedValues[selection] = first
+            }
+        }
         showPickerSheet = true
     }
 
@@ -109,7 +115,12 @@ final class InputMakeupViewModel: ObservableObject {
         }
 
         context.insert(record)
-        try? context.save()
+        do {
+            try context.save()
+        } catch {
+            print("保存エラー: \(error)")
+            return
+        }
         resetAfterSave()
     }
 
