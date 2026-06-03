@@ -28,20 +28,17 @@ struct InputMakeupView: View {
             VStack {
                 HStack {
                     Spacer()
-                    Button {
-                        viewModel.saveMakeup(to: modelContext)
-                        cameraViewModel.imageData = Data()
-                        cameraViewModel.capturedType = nil
-                        path.removeLast()
-                    } label: {
-                        Text("完了")
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
-                            .background(.pink)
-                            .cornerRadius(20)
-                    }
-                    .padding(.trailing, 20)
+//                    Button {
+//                        save()
+//                    } label: {
+//                        Text("完了")
+//                            .foregroundColor(.white)
+//                            .padding(.horizontal, 20)
+//                            .padding(.vertical, 10)
+//                            .background(.pink)
+//                            .cornerRadius(20)
+//                    }
+//                    .padding(.trailing, 20)
                 }
                     //イニシャライザに渡す
                     ZStack {
@@ -521,6 +518,23 @@ struct InputMakeupView: View {
         .onChange(of: cameraViewModel.imageData) { newData in
             viewModel.updateCapturedImage(newData, type: cameraViewModel.capturedType)
         }
+        // キーボード表示中も保存できるように、キーボード上部に完了ボタンを出す
+        // （上部の完了ボタンはキーボードで画面外に押し出されてタップできなくなるため）
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("完了") {
+                    save()
+                }
+            }
+        }
+    }
+
+    private func save() {
+        viewModel.saveMakeup(to: modelContext)
+        cameraViewModel.imageData = Data()
+        cameraViewModel.capturedType = nil
+        path.removeLast()
     }
 }
 
