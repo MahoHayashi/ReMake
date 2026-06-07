@@ -96,13 +96,21 @@ xcodebuild -project ReMake.xcodeproj -scheme ReMake \
 
 ## ポートフォリオ
 
-![ポートフォリオ 9ページ目](docs/portfolio/page-09.jpg)
-![ポートフォリオ 10ページ目](docs/portfolio/page-10.jpg)
-![ポートフォリオ 11ページ目](docs/portfolio/page-11.jpg)
-![ポートフォリオ 12ページ目](docs/portfolio/page-12.jpg)
-![ポートフォリオ 13ページ目](docs/portfolio/page-13.jpg)
-![ポートフォリオ 14ページ目](docs/portfolio/page-14.jpg)
-![ポートフォリオ 15ページ目](docs/portfolio/page-15.jpg)
-![ポートフォリオ 16ページ目](docs/portfolio/page-16.jpg)
-![ポートフォリオ 17ページ目](docs/portfolio/page-17.jpg)
-![ポートフォリオ 18ページ目](docs/portfolio/page-18.jpg)
+<table>
+  <tr>
+    <td><img src="docs/portfolio/page-09.jpg" width="400" alt="ポートフォリオ 9ページ目"></td>
+    <td><img src="docs/portfolio/page-11.jpg" width="400" alt="ポートフォリオ 11ページ目"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/portfolio/page-12.jpg" width="400" alt="ポートフォリオ 12ページ目"></td>
+    <td><img src="docs/portfolio/page-13.jpg" width="400" alt="ポートフォリオ 13ページ目"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/portfolio/page-14.jpg" width="400" alt="ポートフォリオ 14ページ目"></td>
+    <td><img src="docs/portfolio/page-15.jpg" width="400" alt="ポートフォリオ 15ページ目"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/portfolio/page-16.jpg" width="400" alt="ポートフォリオ 16ページ目"></td>
+    <td><img src="docs/portfolio/page-18.jpg" width="400" alt="ポートフォリオ 18ページ目"></td>
+  </tr>
+</table>
