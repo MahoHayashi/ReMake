@@ -66,20 +66,8 @@ struct InputMakeupView: View {
                             // Example for .lip
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.lip] {
-                                    Text(viewModel.sectionTitle(for: .lip))
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .lip), values: values)
                                         .offset(y: -20)
-                                    ForEach(values, id: \.self) { value in
-                                        Text(value)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -20)
-                                    }
                                 }
                                 Button(action: {
                                     viewModel.setPicker(selection: .lip, title: "リップを選択", cosmetics: cosmetics)
@@ -94,20 +82,8 @@ struct InputMakeupView: View {
 
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.highlight] {
-                                    Text(viewModel.sectionTitle(for: .highlight))
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .highlight), values: values)
                                         .offset(y: -20)
-                                    ForEach(values, id: \.self) { value in
-                                        Text(value)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -20)
-                                    }
                                 }
                                 Button(action: {
                                     viewModel.setPicker(selection: .highlight, title: "ハイライト・シェーディングを選択", cosmetics: cosmetics)
@@ -122,20 +98,8 @@ struct InputMakeupView: View {
 
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.eyebrow] {
-                                    Text(viewModel.sectionTitle(for: .eyebrow))
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyebrow), values: values)
                                         .offset(y: -20)
-                                    ForEach(values, id: \.self) { value in
-                                        Text(value)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -20)
-                                    }
                                 }
                                 Button(action: {
                                     viewModel.setPicker(selection: .eyebrow, title: "アイブロウを選択", cosmetics: cosmetics)
@@ -194,20 +158,8 @@ struct InputMakeupView: View {
 
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.base] {
-                                    Text(viewModel.sectionTitle(for: .base))
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .base), values: values)
                                         .offset(y: -20)
-                                    ForEach(values, id: \.self) { value in
-                                        Text(value)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -20)
-                                    }
                                 }
                                 Button(action: {
                                     viewModel.setPicker(selection: .base, title: "ベースメイクを選択", cosmetics: cosmetics)
@@ -222,20 +174,8 @@ struct InputMakeupView: View {
 
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.cheek] {
-                                    Text(viewModel.sectionTitle(for: .cheek))
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .cheek), values: values)
                                         .offset(y: -20)
-                                    ForEach(values, id: \.self) { value in
-                                        Text(value)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -20)
-                                    }
                                 }
                                 Button(action: {
                                     viewModel.setPicker(selection: .cheek, title: "チークを選択", cosmetics: cosmetics)
@@ -251,20 +191,8 @@ struct InputMakeupView: View {
                             ZStack {
                                 VStack(spacing: 0) {
                                     if let values = viewModel.selectedItemLists[.eyeshadow] {
-                                        Text(viewModel.sectionTitle(for: .eyeshadow))
-                                            .font(.caption)
-                                            .bold()
-                                            .foregroundColor(.black)
+                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyeshadow), values: values)
                                             .offset(y: -30)
-                                        ForEach(values, id: \.self) { value in
-                                            Text(value)
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                                .padding(4)
-                                                .background(Color.white.opacity(0.6))
-                                                .cornerRadius(6)
-                                                .offset(y: -30)
-                                        }
                                     }
                                     Button(action: {
                                         viewModel.setPicker(selection: .eyeshadow, title: "アイシャドウを選択", cosmetics: cosmetics)
@@ -323,20 +251,8 @@ struct InputMakeupView: View {
 
                                 VStack(spacing: 0) {
                                     if let values = viewModel.selectedItemLists[.mascara] {
-                                        Text(viewModel.sectionTitle(for: .mascara))
-                                            .font(.caption)
-                                            .bold()
-                                            .foregroundColor(.black)
+                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .mascara), values: values)
                                             .offset(y: -30)
-                                        ForEach(values, id: \.self) { value in
-                                            Text(value)
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                                .padding(4)
-                                                .background(Color.white.opacity(0.6))
-                                                .cornerRadius(6)
-                                                .offset(y: -30)
-                                        }
                                     }
                                     Button(action: {
                                         viewModel.setPicker(selection: .mascara, title: "マスカラを選択", cosmetics: cosmetics)
@@ -351,20 +267,8 @@ struct InputMakeupView: View {
 
                                 VStack(spacing: 0) {
                                     if let values = viewModel.selectedItemLists[.colorlense] {
-                                        Text(viewModel.sectionTitle(for: .colorlense))
-                                            .font(.caption)
-                                            .bold()
-                                            .foregroundColor(.black)
+                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .colorlense), values: values)
                                             .offset(y: -30)
-                                        ForEach(values, id: \.self) { value in
-                                            Text(value)
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                                .padding(4)
-                                                .background(Color.white.opacity(0.6))
-                                                .cornerRadius(6)
-                                                .offset(y: -30)
-                                        }
                                     }
                                     Button(action: {
                                         viewModel.setPicker(selection: .colorlense, title: "カラコンを選択", cosmetics: cosmetics)
@@ -379,20 +283,8 @@ struct InputMakeupView: View {
 
                                 VStack(spacing: 0) {
                                     if let values = viewModel.selectedItemLists[.eyeliner] {
-                                        Text(viewModel.sectionTitle(for: .eyeliner))
-                                            .font(.caption)
-                                            .bold()
-                                            .foregroundColor(.black)
+                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyeliner), values: values)
                                             .offset(y: -30)
-                                        ForEach(values, id: \.self) { value in
-                                            Text(value)
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                                .padding(4)
-                                                .background(Color.white.opacity(0.6))
-                                                .cornerRadius(6)
-                                                .offset(y: -30)
-                                        }
                                     }
                                     Button(action: {
                                         viewModel.setPicker(selection: .eyeliner, title: "アイラインを選択", cosmetics: cosmetics)

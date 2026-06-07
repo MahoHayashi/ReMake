@@ -57,168 +57,42 @@ struct CompareMakeupView: View {
                         if binding.wrappedValue == 0 {
                             // Face overlays
                             if let lip = record.selectedItems["lip"] {
-                                let values = lip.components(separatedBy: ", ")
-                                VStack(spacing: 2) {
-                                    Text("リップ")
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                    }
-                                }
-                                .offset(x: 0, y: 90)
+                                CosmeticOverlayLabel(title: "リップ", values: lip.components(separatedBy: ", "))
+                                    .offset(x: 0, y: 90)
                             }
                             if let highlight = record.selectedItems["highlight"] {
-                                let values = highlight.components(separatedBy: ", ")
-                                VStack(spacing: 2) {
-                                    Text("ハイライト")
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                    }
-                                }
-                                .offset(x: 40, y: -50)
+                                CosmeticOverlayLabel(title: "ハイライト", values: highlight.components(separatedBy: ", "))
+                                    .offset(x: 40, y: -50)
                             }
                             if let eyebrow = record.selectedItems["eyebrow"] {
-                                let values = eyebrow.components(separatedBy: ", ")
-                                VStack(spacing: 2) {
-                                    Text("アイブロウ")
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                    }
-                                }
-                                .offset(x: 70, y: -80)
+                                CosmeticOverlayLabel(title: "アイブロウ", values: eyebrow.components(separatedBy: ", "))
+                                    .offset(x: 70, y: -80)
                             }
                             if let base = record.selectedItems["base"] {
-                                let values = base.components(separatedBy: ", ")
-                                VStack(spacing: 2) {
-                                    Text("ベース")
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                    }
-                                }
-                                .offset(x: -70, y: 20)
+                                CosmeticOverlayLabel(title: "ベース", values: base.components(separatedBy: ", "))
+                                    .offset(x: -70, y: 20)
                             }
                             if let cheek = record.selectedItems["cheek"] {
-                                let values = cheek.components(separatedBy: ", ")
-                                VStack(spacing: 2) {
-                                    Text("チーク")
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                    }
-                                }
-                                .offset(x: 70, y: 20)
+                                CosmeticOverlayLabel(title: "チーク", values: cheek.components(separatedBy: ", "))
+                                    .offset(x: 70, y: 20)
                             }
                         } else if binding.wrappedValue == 1 {
                             // Eye overlays
                             if let eyeshadow = record.selectedItems["eyeshadow"] {
-                                let values = eyeshadow.components(separatedBy: ", ")
-                                VStack(spacing: 2) {
-                                    Text("アイシャドウ")
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                    }
-                                }
-                                .offset(x: 0, y: -70)
+                                CosmeticOverlayLabel(title: "アイシャドウ", values: eyeshadow.components(separatedBy: ", "))
+                                    .offset(x: 0, y: -70)
                             }
                             if let mascara = record.selectedItems["mascara"] {
-                                let values = mascara.components(separatedBy: ", ")
-                                VStack(spacing: 2) {
-                                    Text("マスカラ")
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                    }
-                                }
-                                .offset(x: -70, y: 0)
+                                CosmeticOverlayLabel(title: "マスカラ", values: mascara.components(separatedBy: ", "))
+                                    .offset(x: -70, y: 0)
                             }
                             if let colorlense = record.selectedItems["colorlense"] {
-                                let values = colorlense.components(separatedBy: ", ")
-                                VStack(spacing: 2) {
-                                    Text("カラコン")
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                    }
-                                }
-                                .offset(x: 0, y: 70)
+                                CosmeticOverlayLabel(title: "カラコン", values: colorlense.components(separatedBy: ", "))
+                                    .offset(x: 0, y: 70)
                             }
                             if let eyeliner = record.selectedItems["eyeliner"] {
-                                let values = eyeliner.components(separatedBy: ", ")
-                                VStack(spacing: 2) {
-                                    Text("アイライナー")
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                    }
-                                }
-                                .offset(x: 90, y: 0)
+                                CosmeticOverlayLabel(title: "アイライナー", values: eyeliner.components(separatedBy: ", "))
+                                    .offset(x: 90, y: 0)
                             }
                         }
                     }

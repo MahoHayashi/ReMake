@@ -39,110 +39,40 @@ struct  MakeupDetailView: View {
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .lip)
                             if !values.isEmpty {
-                                VStack(spacing: 2) {
-                                    Text(viewModel.title(for: .lip))
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                        .offset(y: -20)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -20)
-                                    }
-                                }
+                                CosmeticOverlayLabel(title: viewModel.title(for: .lip), values: values)
+                                    .offset(y: -20)
                             }
                         }
                         .position(x: 218, y: 285)
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .highlight)
                             if !values.isEmpty {
-                                VStack(spacing: 2) {
-                                    Text(viewModel.title(for: .highlight))
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                        .offset(y: -20)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -20)
-                                    }
-                                }
+                                CosmeticOverlayLabel(title: viewModel.title(for: .highlight), values: values)
+                                    .offset(y: -20)
                             }
                         }
                         .position(x: 200, y: 208)
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .eyebrow)
                             if !values.isEmpty {
-                                VStack(spacing: 2) {
-                                    Text(viewModel.title(for: .eyebrow))
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                        .offset(y: -20)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -20)
-                                    }
-                                }
+                                CosmeticOverlayLabel(title: viewModel.title(for: .eyebrow), values: values)
+                                    .offset(y: -20)
                             }
                         }
                         .position(x: 278, y: 152)
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .base)
                             if !values.isEmpty {
-                                VStack(spacing: 2) {
-                                    Text(viewModel.title(for: .base))
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                        .offset(y: -20)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -20)
-                                    }
-                                }
+                                CosmeticOverlayLabel(title: viewModel.title(for: .base), values: values)
+                                    .offset(y: -20)
                             }
                         }
                         .position(x: 135, y: 247)
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .cheek)
                             if !values.isEmpty {
-                                VStack(spacing: 2) {
-                                    Text(viewModel.title(for: .cheek))
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.black)
-                                        .offset(y: -20)
-                                    ForEach(values, id: \.self) { val in
-                                        Text(val)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .padding(4)
-                                            .background(Color.white.opacity(0.6))
-                                            .cornerRadius(6)
-                                            .offset(y: -20)
-                                    }
-                                }
+                                CosmeticOverlayLabel(title: viewModel.title(for: .cheek), values: values)
+                                    .offset(y: -20)
                             }
                         }
                         .position(x: 270, y: 230)
@@ -150,89 +80,33 @@ struct  MakeupDetailView: View {
                         ZStack {
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .eyeshadow)
-                            if !values.isEmpty {
-                                    VStack(spacing: 2) {
-                                        Text(viewModel.title(for: .eyeshadow))
-                                            .font(.caption)
-                                            .bold()
-                                            .foregroundColor(.black)
-                                            .offset(y: -30)
-                                        ForEach(values, id: \.self) { val in
-                                            Text(val)
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                                .padding(4)
-                                                .background(Color.white.opacity(0.6))
-                                                .cornerRadius(6)
-                                                .offset(y: -30)
-                                        }
-                                    }
+                                if !values.isEmpty {
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeshadow), values: values)
+                                        .offset(y: -30)
                                 }
                             }
                             .position(x: 150, y: 90)
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .mascara)
-                            if !values.isEmpty {
-                                    VStack(spacing: 2) {
-                                        Text(viewModel.title(for: .mascara))
-                                            .font(.caption)
-                                            .bold()
-                                            .foregroundColor(.black)
-                                            .offset(y: -30)
-                                        ForEach(values, id: \.self) { val in
-                                            Text(val)
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                                .padding(4)
-                                                .background(Color.white.opacity(0.6))
-                                                .cornerRadius(6)
-                                                .offset(y: -30)
-                                        }
-                                    }
+                                if !values.isEmpty {
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .mascara), values: values)
+                                        .offset(y: -30)
                                 }
                             }
                             .position(x: 270, y: 100)
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .colorlense)
-                            if !values.isEmpty {
-                                    VStack(spacing: 2) {
-                                        Text(viewModel.title(for: .colorlense))
-                                            .font(.caption)
-                                            .bold()
-                                            .foregroundColor(.black)
-                                            .offset(y: -30)
-                                        ForEach(values, id: \.self) { val in
-                                            Text(val)
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                                .padding(4)
-                                                .background(Color.white.opacity(0.6))
-                                                .cornerRadius(6)
-                                                .offset(y: -30)
-                                        }
-                                    }
+                                if !values.isEmpty {
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .colorlense), values: values)
+                                        .offset(y: -30)
                                 }
                             }
                             .position(x: 180, y: 205)
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .eyeliner)
-                            if !values.isEmpty {
-                                    VStack(spacing: 2) {
-                                        Text(viewModel.title(for: .eyeliner))
-                                            .font(.caption)
-                                            .bold()
-                                            .foregroundColor(.black)
-                                            .offset(y: -30)
-                                        ForEach(values, id: \.self) { val in
-                                            Text(val)
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                                .padding(4)
-                                                .background(Color.white.opacity(0.6))
-                                                .cornerRadius(6)
-                                                .offset(y: -30)
-                                        }
-                                    }
+                                if !values.isEmpty {
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeliner), values: values)
+                                        .offset(y: -30)
                                 }
                             }
                             .position(x: 328, y: 170)
