@@ -34,36 +34,62 @@ ReMake は次のような流れで使うメイク記録アプリです。
 
 - **言語**: Swift 5.0
 - **UI フレームワーク**: SwiftUI
+- **アーキテクチャ**: MVVM（`@MainActor final class ... : ObservableObject` の ViewModel）
 - **データ永続化**: SwiftData（`@Model` / `@Query` / `ModelContainer`）
 - **カメラ連携**: UIKit の `UIImagePickerController` を `UIViewControllerRepresentable` で SwiftUI に統合
 - **画像処理**: Core Image（`CIImage` / `CIContext`）による撮影画像の向き補正
+- **テスト**: ユニットテストは swift-testing（`import Testing`）、UI テストは XCTest
 - **対象 OS**: iOS 18.5 以上
 - **開発環境**: Xcode
 
 ## プロジェクト構成
 
+SwiftData をベースに、Model / View / ViewModel を分離した MVVM 構成です。
+ViewModel は SwiftData を直接クエリせず、View が `@Query` で取得した結果やメソッド引数として
+`ModelContext` を受け取ります。
+
 ```
 ReMake/
-├── ReMakeApp.swift          # アプリのエントリーポイント。ModelContainer を初期化
-├── MainTabView.swift        # 「メイク一覧」「コスメ一覧」のタブ切り替え
-├── InputCosmeView.swift     # コスメ管理画面 ＋ Cosmetic モデル定義
-├── InputMakeupView.swift    # メイク記録の作成画面 ＋ MakeupRecord モデル定義（中核）
-├── MakeupDetailView.swift   # 保存済みメイクの詳細表示画面（閲覧専用）
-├── CompareMakeupView.swift  # 2件のメイクを並べて比較する画面
-├── SavedMakeListView.swift  # メイク一覧（グリッド表示・比較モードの起点）
-├── ImagePaper.swift         # 横スワイプ画像ビューア（ImagePager）共通部品
-└── Camera.swift             # カメラ機能（UIImagePickerController 連携・向き補正）
+├── ReMakeApp.swift                  # アプリのエントリーポイント。ModelContainer を初期化
+├── Model/
+│   ├── CosmeticModel.swift          # Cosmetic（コスメ）の @Model 定義
+│   └── MakeupRecordModel.swift      # MakeupRecord（メイク記録）の @Model 定義
+├── View/
+│   ├── MainTabView.swift            # 「メイク一覧」「コスメ一覧」のタブ切り替え
+│   ├── InputCosmeView.swift         # コスメ管理画面
+│   ├── InputMakeupView.swift        # メイク記録の作成画面（中核）
+│   ├── MakeupDetailView.swift       # 保存済みメイクの詳細表示画面（閲覧専用）
+│   ├── CompareMakeupView.swift      # 2件のメイクを並べて比較する画面
+│   ├── SavedMakeListView.swift      # メイク一覧（グリッド表示・比較モードの起点）
+│   └── Components/
+│       ├── ImagePaper.swift         # 横スワイプ画像ビューア（ImagePager）共通部品
+│       └── Camera.swift             # カメラ機能（UIImagePickerController 連携・向き補正）
+└── ViewModel/
+    ├── InputCosmeViewModel.swift    # コスメの追加・削除・カテゴリ別整理
+    ├── InputMakeupViewModel.swift   # メイク記録の作成・コスメ選択・保存
+    ├── MakeupDetailViewModel.swift  # 保存済みメイクの表示用データ変換
+    ├── SavedMakeListViewModel.swift # 一覧・比較モード・選択状態の管理
+    └── CameraLaunchViewModel.swift  # カメラ起動状態と撮影画像の受け渡し
 ```
 
 ### データモデル
 
-- **`Cosmetic`** — 1つのコスメ（`brand` / `product` / `color` / `category`）
-- **`MakeupRecord`** — 1つのメイク記録（`name` / `comment` / `url` / 顔・目元の画像データ / 部位ごとに使ったコスメ `selectedItems`）
+- **`Cosmetic`** — 1つのコスメ（`brand` / `product` / `color` / `category`）。`category` は自由文字列で、メイク記録とコスメを結びつけるキーとして使われます。
+- **`MakeupRecord`** — 1つのメイク記録（`name` / `comment` / `url` / 顔・目元の画像データ / 部位ごとに使ったコスメ `selectedItems`）。`selectedItems` は部位名をキー、`", "` 区切りのコスメ名を値とした辞書です。
 
-## ビルド方法
+## ビルド・実行・テスト
 
-1. `ReMake.xcodeproj` を Xcode で開く
-2. 実機または iOS 18.5 以上のシミュレータを選択
-3. Run（⌘R）でビルド・実行
+Xcode で `ReMake.xcodeproj` を開き、実機または iOS 18.5 以上のシミュレータを選択して Run（⌘R）で実行できます。
+コマンドラインからは `xcodebuild`（スキーム: `ReMake`）を使います。
+
+```bash
+# ビルド
+xcodebuild -project ReMake.xcodeproj -scheme ReMake \
+  -destination 'platform=iOS Simulator,name=iPhone 16' build
+
+# テスト（ユニット + UI）
+xcodebuild -project ReMake.xcodeproj -scheme ReMake \
+  -destination 'platform=iOS Simulator,name=iPhone 16' test
+```
 
 > カメラ機能は実機でのみ動作します（シミュレータではカメラを利用できません）。
