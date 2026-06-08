@@ -5,6 +5,9 @@ import SwiftData
 struct  MakeupDetailView: View {
     let record: MakeupRecord
     @StateObject private var viewModel: MakeupDetailViewModel
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @State private var showDeleteAlert = false
 
     init(record: MakeupRecord) {
         self.record = record
@@ -158,6 +161,24 @@ struct  MakeupDetailView: View {
                 Spacer()
                 Spacer()
                
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    showDeleteAlert = true
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                }
+            }
+        }
+        .alert("このメイクを削除しますか？", isPresented: $showDeleteAlert) {
+            Button("キャンセル", role: .cancel) {}
+            Button("削除", role: .destructive) {
+                modelContext.delete(record)
+                try? modelContext.save()
+                dismiss()
             }
         }
     }
