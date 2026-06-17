@@ -11,10 +11,17 @@ import SwiftData
 
 @MainActor
 final class InputCosmeViewModel: ObservableObject {
+    /// リスト1行分のコスメ表示データ（名前と楽天の画像URL）
+    struct CosmeticItem: Identifiable, Hashable {
+        let id: UUID
+        let name: String
+        let imageURL: URL?
+    }
+
     struct CollapsibleSection: Identifiable {
         let id = UUID()
         let title: String
-        var items: [String]
+        var items: [CosmeticItem]
         var isExpanded: Bool = true
     }
 
@@ -38,7 +45,13 @@ final class InputCosmeViewModel: ObservableObject {
             let title = sections[index].title
             sections[index].items = cosmetics
                 .filter { $0.category == title }
-                .map { $0.listProduct }
+                .map { cosmetic in
+                    CosmeticItem(
+                        id: cosmetic.id,
+                        name: cosmetic.listProduct,
+                        imageURL: cosmetic.imageURL.flatMap { URL(string: $0) }
+                    )
+                }
         }
     }
 
@@ -47,6 +60,7 @@ final class InputCosmeViewModel: ObservableObject {
         product: String,
         color: String,
         category: String,
+        imageURL: String?,
         to context: ModelContext,
         existingCosmetics: [Cosmetic]
     ) {
@@ -54,7 +68,8 @@ final class InputCosmeViewModel: ObservableObject {
             brand: brand,
             product: product,
             color: color,
-            category: category
+            category: category,
+            imageURL: imageURL
         )
         context.insert(cosmetic)
         try? context.save()
@@ -67,15 +82,11 @@ final class InputCosmeViewModel: ObservableObject {
         from context: ModelContext,
         cosmetics: [Cosmetic]
     ) {
-        for index in offsets {
-            let itemToDelete = section.items[index]
-            if let cosmeticToDelete = cosmetics.first(where: { $0.listProduct == itemToDelete }) {
-                context.delete(cosmeticToDelete)
-            }
+        let idsToDelete = Set(offsets.map { section.items[$0].id })
+        for cosmetic in cosmetics where idsToDelete.contains(cosmetic.id) {
+            context.delete(cosmetic)
         }
         try? context.save()
-        updateSections(from: cosmetics.filter { cosmetic in
-            !offsets.contains { section.items[$0] == cosmetic.listProduct }
-        })
+        updateSections(from: cosmetics.filter { !idsToDelete.contains($0.id) })
     }
 }
