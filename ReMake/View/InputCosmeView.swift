@@ -84,10 +84,9 @@ struct InputCosmeView: View {
 
 struct Mysheet: View {
     @Environment(\.dismiss) var dismiss
+    @StateObject private var searchViewModel = SearchCosmeticViewModel()
     var sections: [InputCosmeViewModel.CollapsibleSection]
-    @State public var brand: String = ""
     @State public var product: String = ""
-    @State public var color: String = ""
     @State private var selectedCategory: String = "化粧下地"
     var onComplete: (String, String, String, String) -> Void
 
@@ -100,7 +99,7 @@ struct Mysheet: View {
                     }
                     Spacer()
                     Button("完了") {
-                        onComplete(selectedCategory, brand, product, color)
+                        onComplete(selectedCategory, "", product, "")
                         dismiss()
                     }
                 }
@@ -108,7 +107,7 @@ struct Mysheet: View {
                     .font(.headline)
             }
             .padding(.bottom)
-            Spacer()
+
             HStack {
                 Text("カテゴリ")
                     .bold()
@@ -122,29 +121,78 @@ struct Mysheet: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             HStack {
-                Text("ブランド")
-                    .bold()
-                    .frame(width: 80, alignment: .leading)
-                TextField("ブランド名を入力してください", text: $brand)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-            }
-            HStack {
                 Text("商品名")
                     .bold()
                     .frame(width: 80, alignment: .leading)
-                TextField("商品名を入力してください", text: $product)
+                TextField("検索結果を選ぶか入力してください", text: $product)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
             }
-            HStack {
-                Text("色番/色名")
-                    .bold()
-                    .frame(width: 80, alignment: .leading)
-                TextField("色番/色名を入力してください", text: $color)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-            }
-            Spacer()
+
+            searchSection
         }
         .padding()
+    }
+
+    /// 楽天APIでコスメを検索し、結果をタップすると商品名欄に反映するセクション。
+    private var searchSection: some View {
+        VStack(spacing: 8) {
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.secondary)
+                TextField("コスメを検索（楽天）", text: $searchViewModel.keyword)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .submitLabel(.search)
+                    .onSubmit {
+                        Task { await searchViewModel.search() }
+                    }
+                if searchViewModel.isLoading {
+                    ProgressView()
+                }
+            }
+
+            if let message = searchViewModel.errorMessage {
+                Text(message)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 0) {
+                    ForEach(searchViewModel.results) { result in
+                        Button {
+                            product = result.name
+                        } label: {
+                            HStack(alignment: .top, spacing: 12) {
+                                AsyncImage(url: result.imageURL) { image in
+                                    image.resizable().scaledToFill()
+                                } placeholder: {
+                                    Color(white: 0.92)
+                                }
+                                .frame(width: 64, height: 64)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(result.name)
+                                        .font(.subheadline)
+                                        .foregroundColor(.primary)
+                                        .lineLimit(3)
+                                        .multilineTextAlignment(.leading)
+                                    Text("¥\(result.price)")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                            }
+                            .padding(.vertical, 8)
+                        }
+                        Divider()
+                    }
+                }
+            }
+            .frame(maxHeight: .infinity)
+        }
+        .frame(maxHeight: .infinity)
     }
 }
 

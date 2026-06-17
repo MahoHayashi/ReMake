@@ -1,0 +1,28 @@
+//
+//  APIConfig.swift.example
+//  ReMake
+//
+//  APIConfig.swift のテンプレート。
+//  APIConfig.swift は楽天アプリID・アクセスキーを含むため .gitignore で除外している。
+//  このファイルを APIConfig.swift にコピーし、各値を自分のもの
+//  （https://webservice.rakuten.co.jp/ で発行）に書き換えて使うこと。
+//  2026年2月の仕様変更で applicationId と accessKey の両方が必須。
+//
+
+import Foundation
+
+enum APIConfig {
+    /// 楽天ウェブサービスのアプリID（UUID形式・必須）
+    static let rakutenApplicationId = ""
+
+    /// 楽天ウェブサービスのアクセスキー（"pk_" で始まる文字列・必須）
+    static let rakutenAccessKey = ""
+
+    /// リクエストに付与する Origin（許可されたウェブサイトと一致させる）。
+    /// スキーム+ホストのみ（末尾スラッシュ・パスは付けない）。
+    static let rakutenOrigin = "https://github.com"
+
+    /// 化粧品ジャンルでの絞り込みに使うジャンルID（美容・コスメ・香水）
+    /// 0 にするとジャンル絞り込みなしで全商品から検索します。
+    static let rakutenCosmeticGenreId = 100939
+}

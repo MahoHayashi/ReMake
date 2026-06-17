@@ -25,6 +25,8 @@ class Cosmetic {
     }
 
     var listProduct: String {
-        "\(brand) \(product) \(color)"
+        [brand, product, color]
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
     }
 }
