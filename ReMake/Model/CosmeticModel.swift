@@ -15,13 +15,16 @@ class Cosmetic {
     var product: String
     var color: String
     var category: String
+    /// 楽天APIの商品画像URL（検索結果から登録した場合に保持。手入力時は nil）
+    var imageURL: String?
 
-    init(brand: String, product: String, color: String, category: String) {
+    init(brand: String, product: String, color: String, category: String, imageURL: String? = nil) {
         self.id = UUID()
         self.brand = brand
         self.product = product
         self.color = color
         self.category = category
+        self.imageURL = imageURL
     }
 
     var listProduct: String {

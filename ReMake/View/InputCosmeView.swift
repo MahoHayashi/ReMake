@@ -31,12 +31,13 @@ struct InputCosmeView: View {
                         .background(Circle().fill(Color(red: 0xA6/255.0, green: 0x80/255.0, blue: 0x76/255.0)))
                 }
                 .sheet(isPresented: $viewModel.showsheet){
-                    Mysheet(sections: viewModel.sections) { category, brand, product, color in
+                    Mysheet(sections: viewModel.sections) { category, brand, product, color, imageURL in
                         viewModel.addCosmetic(
                             brand: brand,
                             product: product,
                             color: color,
                             category: category,
+                            imageURL: imageURL,
                             to: modelContext,
                             existingCosmetics: cosmetics
                         )
@@ -53,9 +54,19 @@ struct InputCosmeView: View {
             List {
                 ForEach($viewModel.sections) { $section in
                     DisclosureGroup(isExpanded: $section.isExpanded) {
-                        ForEach(section.items, id: \.self) { item in
-                            Text(item)
-                                .foregroundColor(Color(white: 0.3))
+                        ForEach(section.items) { item in
+                            HStack(spacing: 12) {
+                                AsyncImage(url: item.imageURL) { image in
+                                    image.resizable().scaledToFill()
+                                } placeholder: {
+                                    Color(white: 0.92)
+                                }
+                                .frame(width: 44, height: 44)
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+
+                                Text(item.name)
+                                    .foregroundColor(Color(white: 0.3))
+                            }
                         }
                         //削除機能
                         .onDelete { indexSet in
@@ -87,8 +98,9 @@ struct Mysheet: View {
     @StateObject private var searchViewModel = SearchCosmeticViewModel()
     var sections: [InputCosmeViewModel.CollapsibleSection]
     @State public var product: String = ""
+    @State private var selectedImageURL: String?
     @State private var selectedCategory: String = "化粧下地"
-    var onComplete: (String, String, String, String) -> Void
+    var onComplete: (String, String, String, String, String?) -> Void
 
     var body: some View {
         VStack {
@@ -99,7 +111,7 @@ struct Mysheet: View {
                     }
                     Spacer()
                     Button("完了") {
-                        onComplete(selectedCategory, "", product, "")
+                        onComplete(selectedCategory, "", product, "", selectedImageURL)
                         dismiss()
                     }
                 }
@@ -162,6 +174,7 @@ struct Mysheet: View {
                     ForEach(searchViewModel.results) { result in
                         Button {
                             product = result.name
+                            selectedImageURL = result.imageURL?.absoluteString
                         } label: {
                             HStack(alignment: .top, spacing: 12) {
                                 AsyncImage(url: result.imageURL) { image in
