@@ -21,6 +21,19 @@ struct InputMakeupView: View {
     var pickerOptions: [String] {
         viewModel.pickerOptions(from: cosmetics)
     }
+
+    /// コスメ名(listProduct) → 楽天の画像URL の対応表。
+    /// 選択コスメのオーバーレイ表示で画像を出すために使う。
+    var imageURLByName: [String: URL] {
+        Dictionary(
+            cosmetics.compactMap { cosmetic -> (String, URL)? in
+                guard let urlString = cosmetic.imageURL,
+                      let url = URL(string: urlString) else { return nil }
+                return (cosmetic.listProduct, url)
+            },
+            uniquingKeysWith: { first, _ in first }
+        )
+    }
     
     var body: some View {
         ZStack{
@@ -66,7 +79,7 @@ struct InputMakeupView: View {
                             // Example for .lip
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.lip] {
-                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .lip), values: values)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .lip), values: values, imageURLByName: imageURLByName)
                                         .offset(y: -20)
                                 }
                                 Button(action: {
@@ -82,7 +95,7 @@ struct InputMakeupView: View {
 
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.highlight] {
-                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .highlight), values: values)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .highlight), values: values, imageURLByName: imageURLByName)
                                         .offset(y: -20)
                                 }
                                 Button(action: {
@@ -98,7 +111,7 @@ struct InputMakeupView: View {
 
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.eyebrow] {
-                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyebrow), values: values)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyebrow), values: values, imageURLByName: imageURLByName)
                                         .offset(y: -20)
                                 }
                                 Button(action: {
@@ -158,7 +171,7 @@ struct InputMakeupView: View {
 
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.base] {
-                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .base), values: values)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .base), values: values, imageURLByName: imageURLByName)
                                         .offset(y: -20)
                                 }
                                 Button(action: {
@@ -174,7 +187,7 @@ struct InputMakeupView: View {
 
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.cheek] {
-                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .cheek), values: values)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .cheek), values: values, imageURLByName: imageURLByName)
                                         .offset(y: -20)
                                 }
                                 Button(action: {
@@ -191,7 +204,7 @@ struct InputMakeupView: View {
                             ZStack {
                                 VStack(spacing: 0) {
                                     if let values = viewModel.selectedItemLists[.eyeshadow] {
-                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyeshadow), values: values)
+                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyeshadow), values: values, imageURLByName: imageURLByName)
                                             .offset(y: -30)
                                     }
                                     Button(action: {
@@ -251,7 +264,7 @@ struct InputMakeupView: View {
 
                                 VStack(spacing: 0) {
                                     if let values = viewModel.selectedItemLists[.mascara] {
-                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .mascara), values: values)
+                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .mascara), values: values, imageURLByName: imageURLByName)
                                             .offset(y: -30)
                                     }
                                     Button(action: {
@@ -267,7 +280,7 @@ struct InputMakeupView: View {
 
                                 VStack(spacing: 0) {
                                     if let values = viewModel.selectedItemLists[.colorlense] {
-                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .colorlense), values: values)
+                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .colorlense), values: values, imageURLByName: imageURLByName)
                                             .offset(y: -30)
                                     }
                                     Button(action: {
@@ -283,7 +296,7 @@ struct InputMakeupView: View {
 
                                 VStack(spacing: 0) {
                                     if let values = viewModel.selectedItemLists[.eyeliner] {
-                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyeliner), values: values)
+                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyeliner), values: values, imageURLByName: imageURLByName)
                                             .offset(y: -30)
                                     }
                                     Button(action: {
