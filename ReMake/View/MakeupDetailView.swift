@@ -8,10 +8,24 @@ struct  MakeupDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @State private var showDeleteAlert = false
+    @Query private var cosmetics: [Cosmetic]
 
     init(record: MakeupRecord) {
         self.record = record
         _viewModel = StateObject(wrappedValue: MakeupDetailViewModel(record: record))
+    }
+
+    /// コスメ名(listProduct) → 楽天の画像URL の対応表。
+    /// 保存メイクが持つコスメ名から、登録済みコスメの画像を引いて表示するために使う。
+    var imageURLByName: [String: URL] {
+        Dictionary(
+            cosmetics.compactMap { cosmetic -> (String, URL)? in
+                guard let urlString = cosmetic.imageURL,
+                      let url = URL(string: urlString) else { return nil }
+                return (cosmetic.listProduct, url)
+            },
+            uniquingKeysWith: { first, _ in first }
+        )
     }
     
     var body: some View {
@@ -42,7 +56,7 @@ struct  MakeupDetailView: View {
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .lip)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .lip), values: values)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .lip), values: values, imageURLByName: imageURLByName)
                                     .offset(y: -20)
                             }
                         }
@@ -50,7 +64,7 @@ struct  MakeupDetailView: View {
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .highlight)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .highlight), values: values)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .highlight), values: values, imageURLByName: imageURLByName)
                                     .offset(y: -20)
                             }
                         }
@@ -58,7 +72,7 @@ struct  MakeupDetailView: View {
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .eyebrow)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .eyebrow), values: values)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .eyebrow), values: values, imageURLByName: imageURLByName)
                                     .offset(y: -20)
                             }
                         }
@@ -66,7 +80,7 @@ struct  MakeupDetailView: View {
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .base)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .base), values: values)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .base), values: values, imageURLByName: imageURLByName)
                                     .offset(y: -20)
                             }
                         }
@@ -74,7 +88,7 @@ struct  MakeupDetailView: View {
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .cheek)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .cheek), values: values)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .cheek), values: values, imageURLByName: imageURLByName)
                                     .offset(y: -20)
                             }
                         }
@@ -84,7 +98,7 @@ struct  MakeupDetailView: View {
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .eyeshadow)
                                 if !values.isEmpty {
-                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeshadow), values: values)
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeshadow), values: values, imageURLByName: imageURLByName)
                                         .offset(y: -30)
                                 }
                             }
@@ -92,7 +106,7 @@ struct  MakeupDetailView: View {
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .mascara)
                                 if !values.isEmpty {
-                                    CosmeticOverlayLabel(title: viewModel.title(for: .mascara), values: values)
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .mascara), values: values, imageURLByName: imageURLByName)
                                         .offset(y: -30)
                                 }
                             }
@@ -100,7 +114,7 @@ struct  MakeupDetailView: View {
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .colorlense)
                                 if !values.isEmpty {
-                                    CosmeticOverlayLabel(title: viewModel.title(for: .colorlense), values: values)
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .colorlense), values: values, imageURLByName: imageURLByName)
                                         .offset(y: -30)
                                 }
                             }
@@ -108,7 +122,7 @@ struct  MakeupDetailView: View {
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .eyeliner)
                                 if !values.isEmpty {
-                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeliner), values: values)
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeliner), values: values, imageURLByName: imageURLByName)
                                         .offset(y: -30)
                                 }
                             }
