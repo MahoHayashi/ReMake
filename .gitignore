@@ -1,4 +1,4 @@
-# 楽天アプリIDなどの秘密情報を含むため、Git管理から除外する。
-# クローン時は APIConfig.example.swift をコピーして APIConfig.swift を作成し、
-# 自分の applicationId を設定すること。
+# 楽天アプリID・アクセスキーなどの秘密情報を含むため、Git管理から除外する。
+# クローン時は APIConfig.swift.example をコピーして APIConfig.swift を作成し、
+# 自分の applicationId / accessKey を設定すること。
 ReMake/Service/APIConfig.swift
