@@ -79,7 +79,7 @@ struct InputMakeupView: View {
                             // Example for .lip
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.lip] {
-                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .lip), values: values, imageURLByName: imageURLByName)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .lip), values: values, imageURLByName: imageURLByName, showsBackground: true)
                                         .offset(y: -20)
                                 }
                                 Button(action: {
@@ -95,7 +95,7 @@ struct InputMakeupView: View {
 
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.highlight] {
-                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .highlight), values: values, imageURLByName: imageURLByName)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .highlight), values: values, imageURLByName: imageURLByName, showsBackground: true)
                                         .offset(y: -20)
                                 }
                                 Button(action: {
@@ -111,7 +111,7 @@ struct InputMakeupView: View {
 
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.eyebrow] {
-                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyebrow), values: values, imageURLByName: imageURLByName)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyebrow), values: values, imageURLByName: imageURLByName, showsBackground: true)
                                         .offset(y: -20)
                                 }
                                 Button(action: {
@@ -171,7 +171,7 @@ struct InputMakeupView: View {
 
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.base] {
-                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .base), values: values, imageURLByName: imageURLByName)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .base), values: values, imageURLByName: imageURLByName, showsBackground: true)
                                         .offset(y: -20)
                                 }
                                 Button(action: {
@@ -187,7 +187,7 @@ struct InputMakeupView: View {
 
                             VStack(spacing: 0) {
                                 if let values = viewModel.selectedItemLists[.cheek] {
-                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .cheek), values: values, imageURLByName: imageURLByName)
+                                    CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .cheek), values: values, imageURLByName: imageURLByName, showsBackground: true)
                                         .offset(y: -20)
                                 }
                                 Button(action: {
@@ -204,7 +204,7 @@ struct InputMakeupView: View {
                             ZStack {
                                 VStack(spacing: 0) {
                                     if let values = viewModel.selectedItemLists[.eyeshadow] {
-                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyeshadow), values: values, imageURLByName: imageURLByName)
+                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyeshadow), values: values, imageURLByName: imageURLByName, showsBackground: true)
                                             .offset(y: -30)
                                     }
                                     Button(action: {
@@ -264,7 +264,7 @@ struct InputMakeupView: View {
 
                                 VStack(spacing: 0) {
                                     if let values = viewModel.selectedItemLists[.mascara] {
-                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .mascara), values: values, imageURLByName: imageURLByName)
+                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .mascara), values: values, imageURLByName: imageURLByName, showsBackground: true)
                                             .offset(y: -30)
                                     }
                                     Button(action: {
@@ -280,7 +280,7 @@ struct InputMakeupView: View {
 
                                 VStack(spacing: 0) {
                                     if let values = viewModel.selectedItemLists[.colorlense] {
-                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .colorlense), values: values, imageURLByName: imageURLByName)
+                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .colorlense), values: values, imageURLByName: imageURLByName, showsBackground: true)
                                             .offset(y: -30)
                                     }
                                     Button(action: {
@@ -296,7 +296,7 @@ struct InputMakeupView: View {
 
                                 VStack(spacing: 0) {
                                     if let values = viewModel.selectedItemLists[.eyeliner] {
-                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyeliner), values: values, imageURLByName: imageURLByName)
+                                        CosmeticOverlayLabel(title: viewModel.sectionTitle(for: .eyeliner), values: values, imageURLByName: imageURLByName, showsBackground: true)
                                             .offset(y: -30)
                                     }
                                     Button(action: {

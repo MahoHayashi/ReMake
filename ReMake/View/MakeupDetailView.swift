@@ -56,7 +56,7 @@ struct  MakeupDetailView: View {
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .lip)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .lip), values: values, imageURLByName: imageURLByName)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .lip), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
                                     .offset(y: -20)
                             }
                         }
@@ -64,7 +64,7 @@ struct  MakeupDetailView: View {
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .highlight)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .highlight), values: values, imageURLByName: imageURLByName)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .highlight), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
                                     .offset(y: -20)
                             }
                         }
@@ -72,7 +72,7 @@ struct  MakeupDetailView: View {
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .eyebrow)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .eyebrow), values: values, imageURLByName: imageURLByName)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .eyebrow), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
                                     .offset(y: -20)
                             }
                         }
@@ -80,7 +80,7 @@ struct  MakeupDetailView: View {
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .base)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .base), values: values, imageURLByName: imageURLByName)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .base), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
                                     .offset(y: -20)
                             }
                         }
@@ -88,7 +88,7 @@ struct  MakeupDetailView: View {
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .cheek)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .cheek), values: values, imageURLByName: imageURLByName)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .cheek), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
                                     .offset(y: -20)
                             }
                         }
@@ -98,7 +98,7 @@ struct  MakeupDetailView: View {
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .eyeshadow)
                                 if !values.isEmpty {
-                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeshadow), values: values, imageURLByName: imageURLByName)
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeshadow), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
                                         .offset(y: -30)
                                 }
                             }
@@ -106,7 +106,7 @@ struct  MakeupDetailView: View {
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .mascara)
                                 if !values.isEmpty {
-                                    CosmeticOverlayLabel(title: viewModel.title(for: .mascara), values: values, imageURLByName: imageURLByName)
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .mascara), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
                                         .offset(y: -30)
                                 }
                             }
@@ -114,7 +114,7 @@ struct  MakeupDetailView: View {
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .colorlense)
                                 if !values.isEmpty {
-                                    CosmeticOverlayLabel(title: viewModel.title(for: .colorlense), values: values, imageURLByName: imageURLByName)
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .colorlense), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
                                         .offset(y: -30)
                                 }
                             }
@@ -122,7 +122,7 @@ struct  MakeupDetailView: View {
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .eyeliner)
                                 if !values.isEmpty {
-                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeliner), values: values, imageURLByName: imageURLByName)
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeliner), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
                                         .offset(y: -30)
                                 }
                             }
