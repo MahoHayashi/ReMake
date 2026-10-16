@@ -39,20 +39,6 @@ struct InputMakeupView: View {
         ZStack{
             Spacer()
             VStack {
-                HStack {
-                    Spacer()
-//                    Button {
-//                        save()
-//                    } label: {
-//                        Text("完了")
-//                            .foregroundColor(.white)
-//                            .padding(.horizontal, 20)
-//                            .padding(.vertical, 10)
-//                            .background(.pink)
-//                            .cornerRadius(20)
-//                    }
-//                    .padding(.trailing, 20)
-                }
                     //イニシャライザに渡す
                     ZStack {
                         VStack{
@@ -423,11 +409,9 @@ struct InputMakeupView: View {
         .onChange(of: cameraViewModel.imageData) { newData in
             viewModel.updateCapturedImage(newData, type: cameraViewModel.capturedType)
         }
-        // キーボード表示中も保存できるように、キーボード上部に完了ボタンを出す
-        // （上部の完了ボタンはキーボードで画面外に押し出されてタップできなくなるため）
+        // ナビゲーションバー右上の完了ボタン（キーボード表示中も画面外に押し出されない）
         .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                Spacer()
+            ToolbarItem(placement: .topBarTrailing) {
                 Button("完了") {
                     save()
                 }
