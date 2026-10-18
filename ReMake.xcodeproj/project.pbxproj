@@ -40,6 +40,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				ReMakeTests.swift,
+				SearchCosmeReducerTests.swift,
 			);
 			target = 17825AF12DEFEB8F0017DBEB /* ReMake */;
 		};
@@ -47,6 +48,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				ReMakeTests.swift,
+				SearchCosmeReducerTests.swift,
 			);
 			target = 17825AFE2DEFEB910017DBEB /* ReMakeTests */;
 		};
