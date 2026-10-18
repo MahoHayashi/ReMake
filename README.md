@@ -25,30 +25,33 @@ ReMake は次のような流れで使うメイク記録アプリです。
   - 選択した商品の画像URLを保存し、以降の各画面で商品画像として表示
 - **メイク記録の作成**
   - 顔イラスト・目元イラスト上の各部位に配置した「＋」ボタンから、登録済みコスメを選択
-  - 選択したコスメは商品画像（画像が無い場合は名前）でイラスト上に重ねて表示
+  - 選択したコスメは商品画像（画像が無い場合は名前）でイラスト上に重ねて表示。部位名とコスメの後ろに白背景を敷いて読みやすくしている
   - ベースメイクは「化粧下地・ファンデーション・コンシーラー」をまとめて選択可能
   - 顔全体・目元の写真をカメラで撮影して添付（撮影画像の向きを自動補正）
   - メイクのタイトル・コメント・参考にした記事/動画のURLを記録
+  - ナビゲーションバー右上の「完了」ボタンで保存（キーボード表示中も押せる）
 - **メイク一覧**
   - 保存済みメイクを2列のカードグリッドで表示
   - カードから詳細画面へ遷移
+  - 「比較」「決定」「＋」などのボタンは iOS 26 以降で Liquid Glass 表示
 - **メイク詳細**
   - 顔/目元のイラスト・撮影写真を横スワイプで切り替え、各部位に使ったコスメを商品画像つきで重ねて表示
+  - 商品画像の下に商品名を省略せずに表示し、ラベルは半透明の白背景でイラストの外側寄りに配置
 - **比較モード**
   - 一覧から最大2件を選択し、並べて比較表示
 
 ## 技術スタック
 
 - **言語**: Swift 5.0
-- **UI フレームワーク**: SwiftUI
+- **UI フレームワーク**: SwiftUI。iOS 26 以降は Liquid Glass（`glassEffect`）に対応し、`#available(iOS 26, *)` で iOS 18 では従来の見た目にフォールバック
 - **アーキテクチャ**: MVVM（`@MainActor final class ... : ObservableObject` の ViewModel）
 - **データ永続化**: SwiftData（`@Model` / `@Query` / `ModelContainer`）
-- **ネットワーク / API**: 楽天市場 商品検索API を `URLSession` の async/await で呼び出し（2026年新仕様: `openapi.rakuten.co.jp` ドメイン、`applicationId` + `accessKey` + `Origin` ヘッダー）。商品画像は `AsyncImage` で表示
+- **ネットワーク / API**: 楽天市場 商品検索API を `URLSession` の async/await で呼び出し（バージョン 20260701。2026年新仕様: `openapi.rakuten.co.jp` ドメイン、`applicationId` + `accessKey` + `Origin` ヘッダー）。商品画像は `AsyncImage` で表示
 - **カメラ連携**: UIKit の `UIImagePickerController` を `UIViewControllerRepresentable` で SwiftUI に統合
 - **画像処理**: Core Image（`CIImage` / `CIContext`）による撮影画像の向き補正
 - **テスト**: ユニットテストは swift-testing（`import Testing`）、UI テストは XCTest
 - **対象 OS**: iOS 18.5 以上
-- **開発環境**: Xcode
+- **開発環境**: Xcode 26 以降（Liquid Glass の API を使うため iOS 26 SDK が必要）
 
 ## プロジェクト構成
 
@@ -75,7 +78,8 @@ ReMake/
 │   ├── SavedMakeListView.swift      # メイク一覧（グリッド表示・比較モードの起点）
 │   └── Components/
 │       ├── ImagePaper.swift         # 横スワイプ画像ビューア（ImagePager）共通部品
-│       ├── CosmeticOverlayLabel.swift # イラストに重ねる部位ラベル＋選択コスメ表示（画像/テキスト）の共通部品
+│       ├── CosmeticOverlayLabel.swift # イラストに重ねる部位ラベル＋選択コスメ表示（画像/テキスト・白背景・商品名）の共通部品
+│       ├── GlassButtonBackground.swift # ボタン背景の共通部品（iOS 26 以降は Liquid Glass、それ以前は単色）
 │       └── Camera.swift             # カメラ機能（UIImagePickerController 連携・向き補正）
 └── ViewModel/
     ├── InputCosmeViewModel.swift    # コスメの追加・削除・カテゴリ別整理
@@ -113,6 +117,8 @@ xcodebuild -project ReMake.xcodeproj -scheme ReMake \
 ```
 
 > カメラ機能は実機でのみ動作します（シミュレータではカメラを利用できません）。
+>
+> Liquid Glass の見た目は iOS 26 以降のシミュレータ・実機で確認できます。iOS 18.5 では従来のデザインで表示されます。
 
 ## ポートフォリオ
 
