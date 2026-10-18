@@ -2,3 +2,7 @@
 # クローン時は APIConfig.swift.example をコピーして APIConfig.swift を作成し、
 # 自分の applicationId / accessKey を設定すること。
 ReMake/Service/APIConfig.swift
+
+# 個人環境ごとのファイル（Xcodeのウィンドウ状態・エディタ用のビルドサーバー設定）
+xcuserdata/
+buildServer.json

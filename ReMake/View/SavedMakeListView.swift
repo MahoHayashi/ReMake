@@ -28,8 +28,7 @@ struct SavedMakeListView: View {
                                 .font(.headline)
                                 .frame(width: 80, height: 55)
                                 .foregroundColor(.white)
-                                .background(.pink)
-                                .cornerRadius(20)
+                                .glassButtonBackground(.pink, in: RoundedRectangle(cornerRadius: 20))
                                 .padding(.leading, 20)
                         }
                         Spacer()
@@ -51,8 +50,7 @@ struct SavedMakeListView: View {
                                         .frame(width: 50, height: 40)
                                         .padding(.horizontal, 16)
                                         .padding(.vertical, 8)
-                                        .background(Color.pink)
-                                        .cornerRadius(20)
+                                        .glassButtonBackground(.pink, in: RoundedRectangle(cornerRadius: 20))
                                 }
                                 .zIndex(1)
                                 .offset(x: -10, y: 0)
@@ -65,7 +63,7 @@ struct SavedMakeListView: View {
                                     .font(.system(size: 24))
                                     .foregroundColor(.white)
                                     .padding()
-                                    .background(Circle().fill(Color(red: 0xA6/255.0, green: 0x80/255.0, blue: 0x76/255.0)))
+                                    .glassButtonBackground(Color(red: 0xA6/255.0, green: 0x80/255.0, blue: 0x76/255.0), in: Circle())
                             }
                             .padding(.trailing, 20)
                         }
@@ -107,9 +105,9 @@ struct SavedMakeListView: View {
                                         Button {
                                             viewModel.toggleSelection(for: card)
                                         } label: {
-                                            Circle()
-                                                .fill(Color.white)
+                                            Color.clear
                                                 .frame(width: 50, height: 50)
+                                                .glassButtonBackground(.white, in: Circle())
                                                 .overlay(
                                                     ZStack {
                                                         Circle()
