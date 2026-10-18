@@ -9,7 +9,8 @@
 import Foundation
 
 /// 検索画面が使う軽量モデル（楽天のレスポンスを必要な分だけ抽出したもの）
-struct CosmeticSearchResult: Identifiable {
+/// TCA の State に入れてテストで比べるため、Equatable と Sendable にしている。
+struct CosmeticSearchResult: Identifiable, Equatable, Sendable {
     let id = UUID()
     let name: String
     let imageURL: URL?
