@@ -32,6 +32,8 @@ struct CosmeticOverlayLabel: View {
     let values: [String]
     var imageURLByName: [String: URL] = [:]
     var showsBackground = false
+    /// 白背景の不透明度（1 で真っ白、小さくするほど後ろのイラストが透ける）
+    var backgroundOpacity: Double = 1
     /// true にすると、画像で表示するコスメの下に商品名も表示する
     var showsNameUnderImage = false
 
@@ -67,7 +69,7 @@ struct CosmeticOverlayLabel: View {
             }
         }
         .padding(showsBackground ? 6 : 0)
-        .background(showsBackground ? Color.white : Color.clear, in: RoundedRectangle(cornerRadius: 10))
+        .background(showsBackground ? Color.white.opacity(backgroundOpacity) : Color.clear, in: RoundedRectangle(cornerRadius: 10))
     }
 }
 

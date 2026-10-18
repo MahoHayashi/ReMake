@@ -28,6 +28,17 @@ struct  MakeupDetailView: View {
         )
     }
     
+    /// コスメ表示ラベルの基準位置を、画像の中心から外側へ広げた位置に変換する。
+    /// `spreadScale` を大きくするほど中心から離れる。画面の端からはみ出さないよう x は範囲内に収める。
+    private let labelCenter = CGPoint(x: 195, y: 185)
+    private let spreadScale: CGFloat = 1.6
+
+    private func spreadPosition(x: CGFloat, y: CGFloat) -> CGPoint {
+        let spreadX = labelCenter.x + (x - labelCenter.x) * spreadScale
+        let spreadY = labelCenter.y + (y - labelCenter.y) * spreadScale
+        return CGPoint(x: min(max(spreadX, 50), 345), y: spreadY)
+    }
+
     var body: some View {
         ZStack{
             Spacer()
@@ -56,77 +67,77 @@ struct  MakeupDetailView: View {
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .lip)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .lip), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .lip), values: values, imageURLByName: imageURLByName, showsBackground: true, backgroundOpacity: 0.75, showsNameUnderImage: true)
                                     .offset(y: -20)
                             }
                         }
-                        .position(x: 218, y: 285)
+                        .position(spreadPosition(x: 218, y: 285))
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .highlight)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .highlight), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .highlight), values: values, imageURLByName: imageURLByName, showsBackground: true, backgroundOpacity: 0.75, showsNameUnderImage: true)
                                     .offset(y: -20)
                             }
                         }
-                        .position(x: 200, y: 208)
+                        .position(spreadPosition(x: 200, y: 208))
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .eyebrow)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .eyebrow), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .eyebrow), values: values, imageURLByName: imageURLByName, showsBackground: true, backgroundOpacity: 0.75, showsNameUnderImage: true)
                                     .offset(y: -20)
                             }
                         }
-                        .position(x: 278, y: 152)
+                        .position(spreadPosition(x: 278, y: 152))
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .base)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .base), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .base), values: values, imageURLByName: imageURLByName, showsBackground: true, backgroundOpacity: 0.75, showsNameUnderImage: true)
                                     .offset(y: -20)
                             }
                         }
-                        .position(x: 135, y: 247)
+                        .position(spreadPosition(x: 135, y: 247))
                         VStack(spacing: 0) {
                             let values = viewModel.values(for: .cheek)
                             if !values.isEmpty {
-                                CosmeticOverlayLabel(title: viewModel.title(for: .cheek), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
+                                CosmeticOverlayLabel(title: viewModel.title(for: .cheek), values: values, imageURLByName: imageURLByName, showsBackground: true, backgroundOpacity: 0.75, showsNameUnderImage: true)
                                     .offset(y: -20)
                             }
                         }
-                        .position(x: 270, y: 230)
+                        .position(spreadPosition(x: 270, y: 230))
                     } else if viewModel.imageIndex == 1 {
                         ZStack {
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .eyeshadow)
                                 if !values.isEmpty {
-                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeshadow), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeshadow), values: values, imageURLByName: imageURLByName, showsBackground: true, backgroundOpacity: 0.75, showsNameUnderImage: true)
                                         .offset(y: -30)
                                 }
                             }
-                            .position(x: 150, y: 90)
+                            .position(spreadPosition(x: 150, y: 90))
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .mascara)
                                 if !values.isEmpty {
-                                    CosmeticOverlayLabel(title: viewModel.title(for: .mascara), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .mascara), values: values, imageURLByName: imageURLByName, showsBackground: true, backgroundOpacity: 0.75, showsNameUnderImage: true)
                                         .offset(y: -30)
                                 }
                             }
-                            .position(x: 270, y: 100)
+                            .position(spreadPosition(x: 270, y: 100))
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .colorlense)
                                 if !values.isEmpty {
-                                    CosmeticOverlayLabel(title: viewModel.title(for: .colorlense), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .colorlense), values: values, imageURLByName: imageURLByName, showsBackground: true, backgroundOpacity: 0.75, showsNameUnderImage: true)
                                         .offset(y: -30)
                                 }
                             }
-                            .position(x: 180, y: 205)
+                            .position(spreadPosition(x: 180, y: 205))
                             VStack(spacing: 0) {
                                 let values = viewModel.values(for: .eyeliner)
                                 if !values.isEmpty {
-                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeliner), values: values, imageURLByName: imageURLByName, showsBackground: true, showsNameUnderImage: true)
+                                    CosmeticOverlayLabel(title: viewModel.title(for: .eyeliner), values: values, imageURLByName: imageURLByName, showsBackground: true, backgroundOpacity: 0.75, showsNameUnderImage: true)
                                         .offset(y: -30)
                                 }
                             }
-                            .position(x: 328, y: 170)
+                            .position(spreadPosition(x: 328, y: 170))
                         }
                     }
                 }
